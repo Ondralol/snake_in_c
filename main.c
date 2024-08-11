@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <stddef.h>
+#include "display.h"
+#include "conversion.h"
 
 #define WIDTH  32
 #define HEIGHT 32
@@ -6,9 +9,14 @@
 
 int main (int argc, char ** argv)
 {
-  //TODO user inputs size
-  
+  size_t width = WIDTH;
+  size_t height = HEIGHT;
+  if ( argc == 3 )
+  {
+    strToNum(&width, argv[1]);
+    strToNum(&height, argv[2]);
+  }
 
-  runGame();
-
+  runGame(width, height);
+  return 0;
 }
