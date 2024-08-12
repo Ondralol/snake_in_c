@@ -18,11 +18,11 @@ bool showMenu(size_t currentScore)
     displayMenu(currentScore);
  
     c = getchar();
+    
     if ( c == 'e' || c == 'E')
       return 0;
     else if ( c == 's' || c == 'S')
       return 1;
-  
   
   }
 
@@ -30,58 +30,84 @@ bool showMenu(size_t currentScore)
 }
 
 
-void displayGame(size_t * currentScore, size_t width, size_t height )
+void displayGame(size_t * currentScore, size_t width, size_t height, position pos )
 {
+  int x = pos.x;
+  int y = pos.y;
   
+
   for (int i = 0; i < 100; i++) printf("\n");
-  
+
+  //printf("\033[44m");
+  printf(" SCORE: %zu\n", *currentScore);
+
+
   /* Game borders */
   for (int i = 0; i < width; i ++)
   {
     if (i == 0)
-      printf("┌");
+      printf("╔");
     else if (i == width - 1)
-      printf("┐");
+      printf("╗");
     else
-      printf("─");
+      printf("═");
   }
   printf("\n");
 
   for (int i = 0; i < height - 2; i ++)
   {
-    printf("│");
+    printf("║");
     for (int j = 0; j < width -2; j++)
     {
       //printf(" ");
-      if ( i == 10 && j == 10 )
-        printf("%zu", *currentScore);
+      if ( i == y && j == x )
+        printf("▄");
       else
-        printf(" ");
+        printf(".");
     }
-    printf("│\n");
+    printf("║\n");
   }
 
   for (int i = 0; i < width; i ++)
   {
     if (i == 0)
-      printf("└");
+      printf("╚");
     else if (i == width -1)
-      printf("┘");
+      printf("╝");
     else
-      printf("─");
+      printf("═");
   }
   printf("\n");
 
   /* 24FPS */
-  usleep(41667);
+  //usleep(667);
 }
 
 bool showGame (size_t * currentScore, size_t width, size_t height)
 {
+  position pos;
+  pos.x = width/2;
+  pos.y = height/2;
+  int c;
+
   while (true)
   {
-    displayGame(currentScore, width, height);
-    //(*currentScore) ++;
+    displayGame(currentScore, width, height, pos);
+    c = getchar();
+    switch (c)
+    {
+      case 'w':
+        pos.y --; break;
+      case 's':
+        pos.y ++; break;
+      case 'a':
+        pos.x --; break;
+      case 'd':
+        pos.x ++; break;
+      //case 'e':
+        //return 0;
+    }
+    //pos.y --;
   }
   return 0;
 }

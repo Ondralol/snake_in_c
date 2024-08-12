@@ -7,8 +7,8 @@
 #include "conversion.h"
 #include "game.h"
 
-#define WIDTH  32
-#define HEIGHT 32
+#define WIDTH  16
+#define HEIGHT 16
 #define SNAKECHARACTER 100 //ascii value
 
 int main (int argc, char ** argv)
@@ -31,7 +31,7 @@ int main (int argc, char ** argv)
   newSettings = oldSettings;
 
   /* Changing STDIN settings - processing new line instantly and not after \n, turning off ECHO*/
-  newSettings.c_lflag &= ~(ICANON | ECHO);
+  newSettings.c_lflag &= ~(ICANON | ECHO); 
   
   
   /* Applying new settings */
