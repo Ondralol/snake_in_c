@@ -1,35 +1,23 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <signal.h>
 #include "display.h"
+#include "terminal.h"
 
-void displayMenu(size_t currentScore)
+/* Pass score as argument somehow???*/
+void displayMenu()
 {
-  for (int i = 0; i < 100; i++) printf("\n");
-  printf("PRESS 'S' TO START THE GAME\n");
-  printf("PRESS 'E' TO END THE GAME\n");
-  
-  /* 24FPS */
-  usleep(100000);
-}
+  TClearScreen();
+  int x, y;
+  TGetTerminalSize(&x,&y);
 
-bool showMenu(size_t currentScore)
-{
-  int c = 0;
-  while (true)
-  {
-    displayMenu(currentScore);
- 
-    c = getchar();
-    
-    if ( c == 'e' || c == 'E')
-      return 0;
-    else if ( c == 's' || c == 'S')
-      return 1;
+  TCursorMoveXY((x/2)-10, (y/2)-3);
   
-  }
+  TChangeSettings(TBWHITE);
+  printf("S N A K E\n");
 
-  return 0;
+
 }
 
 

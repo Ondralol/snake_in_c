@@ -7,10 +7,11 @@
 #include "display.h"
 #include "conversion.h"
 #include "game.h"
+#include "terminal.h"
 
 #define WIDTH  16
 #define HEIGHT 16
-#define SNAKECHARACTER 100 //ascii value
+#define SNAKECHARACTER 100 /* TODO */
 
 int main (int argc, char ** argv)
 {
@@ -25,28 +26,15 @@ int main (int argc, char ** argv)
   }
 
   /* Changing terminal settings */
-  static struct termios oldSettings, newSettings;
-  
-  /* Non-blocking behaviour*/
-  fcntl( 0, F_SETFL, O_NONBLOCK);
+  struct termios settings;
 
-  /* Saving the old terminal settings */
-  tcgetattr(STDIN_FILENO, &oldSettings);
-  newSettings = oldSettings;
-
-  /* Changing STDIN settings - processing new line instantly and not after \n, turning off ECHO*/
-  newSettings.c_lflag &= ~(ICANON | ECHO); 
-  
-  
-  /* Applying new settings */
-  tcsetattr(STDIN_FILENO, TCSANOW, &newSettings);
+  TSetup(&settings);
 
   runGame(width, height);
 
   /* Restoring the old settings */
-  tcsetattr(STDIN_FILENO, TCSANOW, &oldSettings);
   
-  
+  TReset(&settings);
 
   return 0;
 }

@@ -6,9 +6,7 @@ typedef struct position
   int y;
 } position;
 
-void displayMenu(size_t currentScore);
-
-bool showMenu(size_t  currentScore);
+void displayMenu();
 
 void displayGame(size_t * currentScore, size_t width, size_t height, position pos );
 
