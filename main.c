@@ -3,6 +3,7 @@
 #include <termios.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <fcntl.h>
 #include "display.h"
 #include "conversion.h"
 #include "game.h"
@@ -26,6 +27,9 @@ int main (int argc, char ** argv)
   /* Changing terminal settings */
   static struct termios oldSettings, newSettings;
   
+  /* Non-blocking behaviour*/
+  fcntl( 0, F_SETFL, O_NONBLOCK);
+
   /* Saving the old terminal settings */
   tcgetattr(STDIN_FILENO, &oldSettings);
   newSettings = oldSettings;

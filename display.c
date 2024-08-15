@@ -7,7 +7,10 @@ void displayMenu(size_t currentScore)
 {
   for (int i = 0; i < 100; i++) printf("\n");
   printf("PRESS 'S' TO START THE GAME\n");
-  printf("PRESS 'E' TO END THE GAME");
+  printf("PRESS 'E' TO END THE GAME\n");
+  
+  /* 24FPS */
+  usleep(100000);
 }
 
 bool showMenu(size_t currentScore)
@@ -80,7 +83,7 @@ void displayGame(size_t * currentScore, size_t width, size_t height, position po
   printf("\n");
 
   /* 24FPS */
-  //usleep(667);
+  usleep(10000);
 }
 
 bool showGame (size_t * currentScore, size_t width, size_t height)
@@ -107,7 +110,7 @@ bool showGame (size_t * currentScore, size_t width, size_t height)
       //case 'e':
         //return 0;
     }
-    //pos.y --;
+    pos.y --;
   }
   return 0;
 }
