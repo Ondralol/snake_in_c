@@ -5,19 +5,70 @@
 #include "display.h"
 #include "terminal.h"
 
+// TODO animation of the borders
+// TODO start animation
+// TODO save highscore
+
+void displayBorders()
+{
+  int x, y;
+  TGetTerminalSize(&x,&y);
+  TCursorReset();
+  TChangeSettings(TBWHITE);
+  for ( int i = 0; i < x; i ++)
+    printf("▀");
+
+  for ( int i = 1; i < y; i ++ )
+  {
+    TCursorMoveXY(0,i);
+    printf("█");
+    TCursorMoveXY(x,i);
+    printf("█");
+  }
+  TCursorMoveXY(0,y);
+  for ( int i = 0; i < x; i ++) 
+    printf("▀");
+
+}
+
 /* Pass score as argument somehow???*/
 void displayMenu()
 {
   TClearScreen();
+  
   int x, y;
   TGetTerminalSize(&x,&y);
+  
+  displayBorders();
 
-  TCursorMoveXY((x/2)-10, (y/2)-3);
+  TCursorMoveXY((x/2)-35, (y/2)-5);
   
   TChangeSettings(TBWHITE);
-  printf("S N A K E\n");
+  //printf("S N A K E\n");
+  
+  
+  printf(" ░▒▓███████▓▒░▒▓███████▓▒░  ░▒▓██████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓████████▓▒░\n");
+  TCursorMoveRight((x/2)-35);
+  printf("░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░        \n");
+  TCursorMoveRight((x/2)-35);
+  printf("░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░        \n");
+  TCursorMoveRight((x/2)-35);
+  printf(" ░▒▓██████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓████████▓▒░▒▓███████▓▒░░▒▓██████▓▒░   \n");
+  TCursorMoveRight((x/2)-35);
+  printf("       ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░        \n");
+  TCursorMoveRight((x/2)-35);
+  printf("       ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░       \n");
+  TCursorMoveRight((x/2)-35);
+  printf("░▒▓███████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓████████▓▒░ \n");
 
-
+  TChangeSettings(TBRED);
+  TCursorMoveDown(1);
+  TCursorMoveRight((x/2)-8);
+  printf("HIGHSCORE: %d\n", 0); //TODO
+  
+  TChangeSettings(TBGREEN);
+  TCursorMoveRight((x/2)-35);
+  printf("PRESS W/A/S/D TO START THE GAME, USE P TO PAUSE, E TO EXIT THE GAME"); // use esc later
 }
 
 
