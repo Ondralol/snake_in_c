@@ -103,7 +103,7 @@ int gameLogic(size_t x, size_t y, size_t * score)
 			displayGame(x, y, score);
 			
 
-		if ( timer == 250 )
+		if ( timer == 1 )
 		{
 			timer = 0;
 			displaySnake(x, y, &gameData);
@@ -155,7 +155,8 @@ int gameLogic(size_t x, size_t y, size_t * score)
 			case 'p':
 				return 1;
 		}
-		usleep(100);
+		fflush(stdout);
+		usleep(10000);
 	}
 	
 	return 0;
