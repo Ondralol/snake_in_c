@@ -11,8 +11,8 @@
 /*
 typedef struct Settings
 {
-  int x;
-  int y;
+	int x;
+	int y;
 } Settings;
 */
 
@@ -23,92 +23,111 @@ int gameLogic(size_t x, size_t y, size_t * score);
 
 void runGame(size_t width, size_t height)
 {
-    size_t score = 0;
-    int outputSignal = 0;
-    while (true)
-    {
-      outputSignal = menuLogic(score);
-      if (outputSignal == 0 )
-        return;
-     
-      //else if (outputSignal == 1)
-      
-      outputSignal = gameLogic(width, height, &score);
+		size_t score = 0;
+		int outputSignal = 0;
+		while (true)
+		{
+			outputSignal = menuLogic(score);
+			if (outputSignal == 0 )
+				return;
+		 
+			//else if (outputSignal == 1)
+			
+			outputSignal = gameLogic(width, height, &score);
 
-      if (outputSignal == 0 )
-        return;
-    }
+			if (outputSignal == 0 )
+				return;
+		}
 
 }
 
 int menuLogic(size_t score)
 {
-  displayMenu();
-  int c = 0;
-  while (true)
-  {
-    signal(SIGWINCH, &windowResize);
+	displayMenu();
+	int c = 0;
+	while (true)
+	{
+		signal(SIGWINCH, &windowResize);
 		if ( signalVal == 1 )
 			displayMenu();
-    
-    c = getchar();
-    switch (c)
-    {
-      case 'w':
-        return 1;
-      
-      case 'a':
-        return 1;
+		
+		
+		c = getchar();
+		switch (c)
+		{
+			case 'W':
+			case 'w':
+				return 1;
+			
+			case 'A':
+			case 'a':
+				return 1;
 
-      case 's':
-        return 1;
+			case 'S':
+			case 's':
+				return 1;
 
-      case 'd':
-        return 1;
+			case 'D':
+			case 'd':
+				return 1;
 
-      case 'e':
-        return 0;
-    }
-  }
+			case 'E':
+			case 'e':
+				return 0;
+		}
+	}
 
-  return 0;
+	return 0;
 }
 
 int gameLogic(size_t x, size_t y, size_t * score)
 {
 	snake gameData;
-	
-	displayGame(x, y, score, &gameData);
+	gameData.currentDirection = DOWN;
+	gameData.head.x = 0;
+	gameData.head.y = 0;
+	displayGame(x, y, score);
 	int c = 0;
-  while (true)
-  {
-    signal(SIGWINCH, &windowResize);
+	while (true)
+	{
+		signal(SIGWINCH, &windowResize);
 		if ( signalVal == 1)
-			displayGame(x, y, score, &gameData);
+			displayGame(x, y, score);
+			
 
-    c = getchar();
-    switch (c)
-    {
-      case 'w':
-        gameData.currentDirection = UP;
+		displaySnake(x, y, &gameData);
+		c = getchar();
+		switch (c)
+		{
+			case 'W':
+			case 'w':
+				gameData.currentDirection = UP;
 				break;
 
-      case 'a':
+			case 'A':
+			case 'a':
 				gameData.currentDirection = LEFT;
-        break;
+				break;
 
-      case 's':
+			case 'S':
+			case 's':
 				gameData.currentDirection = DOWN;
-        break;
+				break;
 
-      case 'd':
-        gameData.currentDirection = LEFT;
-        break;
+			case 'D':
+			case 'd':
+				gameData.currentDirection = LEFT;
+				break;
 
-      case 'e':
-        return 0;
-    }
-  }
+			case 'E':
+			case 'e':
+				return 0;
+
+			case 'P':
+			case 'p':
+				return 1;
+		}
+	}
 
 	return 0;
 }
