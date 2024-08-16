@@ -61,7 +61,7 @@ void TChangeSettings(const char * str)
 
 void TCursorReset ()
 {
-	TCursorMoveXY(0,0);
+	printf("\x1B[H");
 	fflush(stdout);
 }
 

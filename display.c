@@ -96,7 +96,7 @@ void displayGame(size_t width, size_t height, size_t * score )
 	
 	displayBorders(TBWHITE);
 	
-	//TChangeSettings(THIBLACK);
+	TChangeSettings(THIBLACK);
 	TCursorMoveXY((x - width) / 2 + 1, (y - height) / 2);
 	
 	/* Game borders */
@@ -111,12 +111,12 @@ void displayGame(size_t width, size_t height, size_t * score )
 	for (int i = 0; i < height - 2; i ++)
 	{
 		printf("█");
+		TChangeSettings(TBWHITE);
 		for (int j = 0; j < width -2; j++)
 		{
-			//TChangeSettings(TRWHITE);
 			printf(".");
-			//TChangeSettings(TRNORMAL);
-		}	
+		}
+		TChangeSettings(THIBLACK);
 		printf("█");
 		TCursorDownLines(1);
 		TCursorMoveRight( (x-width) / 2);
@@ -133,8 +133,50 @@ void displayGame(size_t width, size_t height, size_t * score )
 	TChangeSettings(TRESET);
 }
 
-void displaySnake(size_t widht, size_t height, snake * gameData)
+void displaySnake(size_t width, size_t height, snake * gameData)
 {
+	int x, y;
+  TGetTerminalSize(&x,&y);
 
+	if ( (gameData->head).x == 0 && (gameData->head).y == 0 )
+	{
+		(gameData->head).x = x / 2;
+		(gameData->head).y = y / 2;
+	}
+
+	
+	if ( gameData -> currentDirection == UP )
+		(gameData->head).y -= 1;
+	
+	else if ( gameData -> currentDirection == DOWN )
+    (gameData->head).y += 1;
+
+	else if ( gameData -> currentDirection == RIGHT )
+		(gameData->head).x +=1;
+	
+	else if ( gameData -> currentDirection == LEFT )
+    (gameData->head).x -= 1;
+
+
+	TCursorMoveXY((gameData->head).x, (gameData->head).y);
+	TChangeSettings(THIYELLOW);
+	printf("▄");
+	TCursorMoveXY((gameData->tail).x, (gameData->tail).y);
+	
+	if ( (gameData->tail).x != 0 && (gameData->tail).y != 0 )
+  {
+		TChangeSettings(TBWHITE);
+		printf(".");
+	}
+
+	(gameData->tail).x = (gameData->head).x;
+  (gameData->tail).y = (gameData->head).y;
+
+
+	TChangeSettings(TRESET);
 }
+
+
+
+
 

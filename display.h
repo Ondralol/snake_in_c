@@ -31,4 +31,4 @@ void displayMenu();
 
 void displayGame(size_t width, size_t height, size_t * score);
 
-void displaySnake(size_t widht, size_t height, snake * gameData);
+void displaySnake(size_t width, size_t height, snake * gameData);

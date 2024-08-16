@@ -83,40 +83,68 @@ int menuLogic(size_t score)
 int gameLogic(size_t x, size_t y, size_t * score)
 {
 	snake gameData;
+	
 	gameData.currentDirection = DOWN;
 	gameData.head.x = 0;
 	gameData.head.y = 0;
+	gameData.tail.x = 0;
+  gameData.tail.y = 0;
+
+
+
 	displayGame(x, y, score);
 	int c = 0;
+	size_t timer = 0;
 	while (true)
 	{
+		timer ++;
 		signal(SIGWINCH, &windowResize);
 		if ( signalVal == 1)
 			displayGame(x, y, score);
 			
 
-		displaySnake(x, y, &gameData);
+		if ( timer == 250 )
+		{
+			timer = 0;
+			displaySnake(x, y, &gameData);
+		}
 		c = getchar();
 		switch (c)
 		{
 			case 'W':
 			case 'w':
-				gameData.currentDirection = UP;
+				if ( gameData.currentDirection != UP )
+				{
+					gameData.currentDirection = UP;
+					displaySnake(x, y, &gameData);
+				}
 				break;
 
 			case 'A':
 			case 'a':
-				gameData.currentDirection = LEFT;
+				if ( gameData.currentDirection != LEFT )
+        {
+          gameData.currentDirection = LEFT;
+          displaySnake(x, y, &gameData);
+        }
 				break;
 
 			case 'S':
 			case 's':
-				gameData.currentDirection = DOWN;
+				if ( gameData.currentDirection != DOWN )
+        {
+          gameData.currentDirection = DOWN;
+          displaySnake(x, y, &gameData);
+        }
 				break;
 
 			case 'D':
 			case 'd':
-				gameData.currentDirection = LEFT;
+				if ( gameData.currentDirection != RIGHT )
+        {
+          gameData.currentDirection = RIGHT;
+          displaySnake(x, y, &gameData);
+        }
 				break;
 
 			case 'E':
@@ -127,8 +155,9 @@ int gameLogic(size_t x, size_t y, size_t * score)
 			case 'p':
 				return 1;
 		}
+		usleep(100);
 	}
-
+	
 	return 0;
 }
 
