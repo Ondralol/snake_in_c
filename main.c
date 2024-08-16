@@ -9,9 +9,12 @@
 #include "game.h"
 #include "terminal.h"
 
-#define WIDTH  16
-#define HEIGHT 16
+#define WIDTH  42
+#define HEIGHT 24
 #define SNAKECHARACTER 100 /* TODO */
+
+/* Only using single global variable for signal handling as there is no better way */
+bool signalVal;
 
 int main (int argc, char ** argv)
 {

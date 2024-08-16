@@ -9,12 +9,20 @@
 // TODO start animation
 // TODO save highscore
 
-void displayBorders()
+extern bool signalVal;
+
+void windowResize()
+{
+  signalVal = 1;
+}
+
+
+void displayBorders(const char * colour)
 {
   int x, y;
   TGetTerminalSize(&x,&y);
   TCursorReset();
-  TChangeSettings(TBWHITE);
+  TChangeSettings(colour);
   for ( int i = 0; i < x; i ++)
     printf("▀");
 
@@ -28,22 +36,24 @@ void displayBorders()
   TCursorMoveXY(0,y);
   for ( int i = 0; i < x; i ++) 
     printf("▀");
-
+	
+	TChangeSettings(TRESET);
 }
 
 /* Pass score as argument somehow???*/
 void displayMenu()
 {
   TClearScreen();
-  
+	signalVal = 0;
+
   int x, y;
   TGetTerminalSize(&x,&y);
   
-  displayBorders();
+  displayBorders(TBWHITE);
 
   TCursorMoveXY((x/2)-35, (y/2)-5);
   
-  TChangeSettings(TBWHITE);
+  TChangeSettings(THIBLACK);
   //printf("S N A K E\n");
   
   
@@ -69,88 +79,58 @@ void displayMenu()
   TChangeSettings(TBGREEN);
   TCursorMoveRight((x/2)-35);
   printf("PRESS W/A/S/D TO START THE GAME, USE P TO PAUSE, E TO EXIT THE GAME"); // use esc later
+	TChangeSettings(TRESET);
 }
 
 
-void displayGame(size_t * currentScore, size_t width, size_t height, position pos )
+void displayGame(size_t width, size_t height, size_t * score, snake * gameData )
 {
-  int x = pos.x;
-  int y = pos.y;
-  
+	TClearScreen();
+	signalVal = 0;
 
-  for (int i = 0; i < 100; i++) printf("\n");
+	displayBorders(TBWHITE);
+ 	
+	int x, y;
+  TGetTerminalSize(&x,&y);
 
-  //printf("\033[44m");
-  printf(" SCORE: %zu\n", *currentScore);
+  displayBorders(TBWHITE);
+	
+	TChangeSettings(THIBLACK);
 
+  TCursorMoveXY((x/2)-width/2 + 1, (y/2)-height/2);
 
   /* Game borders */
   for (int i = 0; i < width; i ++)
   {
-    if (i == 0)
-      printf("╔");
-    else if (i == width - 1)
-      printf("╗");
-    else
-      printf("═");
+      printf("▄");
   }
-  printf("\n");
+	printf("\n");
+	TCursorMoveRight((x/2)-width/2);
 
   for (int i = 0; i < height - 2; i ++)
   {
-    printf("║");
+    printf("█");
     for (int j = 0; j < width -2; j++)
     {
-      //printf(" ");
-      if ( i == y && j == x )
-        printf("▄");
-      else
-        printf(".");
-    }
-    printf("║\n");
-  }
+      TChangeSettings(THIWHITE);
+			printf(".");
+			TChangeSettings(THIBLACK);
+    }	
+    printf("█\n");
+		TCursorMoveRight((x/2)-width/2);
+  }	
 
   for (int i = 0; i < width; i ++)
   {
-    if (i == 0)
-      printf("╚");
-    else if (i == width -1)
-      printf("╝");
-    else
-      printf("═");
+    printf("▀");
   }
   printf("\n");
+	
+	TCursorMoveDown(3);
+	TCursorMoveRight((x/2)-4);
+	
+	TChangeSettings(TBGREEN);
+	printf("SCORE: %zu", *score);
 
-  /* 24FPS */
-  usleep(10000);
-}
-
-bool showGame (size_t * currentScore, size_t width, size_t height)
-{
-  position pos;
-  pos.x = width/2;
-  pos.y = height/2;
-  int c;
-
-  while (true)
-  {
-    displayGame(currentScore, width, height, pos);
-    c = getchar();
-    switch (c)
-    {
-      case 'w':
-        pos.y --; break;
-      case 's':
-        pos.y ++; break;
-      case 'a':
-        pos.x --; break;
-      case 'd':
-        pos.x ++; break;
-      //case 'e':
-        //return 0;
-    }
-    pos.y --;
-  }
-  return 0;
 }
 

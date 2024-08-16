@@ -16,6 +16,8 @@ typedef struct Settings
 } Settings;
 */
 
+extern bool signalVal;
+
 int menuLogic(size_t score);
 int gameLogic(size_t x, size_t y, size_t * score);
 
@@ -45,7 +47,9 @@ int menuLogic(size_t score)
   int c = 0;
   while (true)
   {
-    signal(SIGWINCH, &displayMenu);
+    signal(SIGWINCH, &windowResize);
+		if ( signalVal == 1 )
+			displayMenu();
     
     c = getchar();
     switch (c)
@@ -72,6 +76,40 @@ int menuLogic(size_t score)
 
 int gameLogic(size_t x, size_t y, size_t * score)
 {
-  return 0;
+	snake gameData;
+	
+	displayGame(x, y, score, &gameData);
+	int c = 0;
+  while (true)
+  {
+    signal(SIGWINCH, &windowResize);
+		if ( signalVal == 1)
+			displayGame(x, y, score, &gameData);
+
+    c = getchar();
+    switch (c)
+    {
+      case 'w':
+        gameData.currentDirection = UP;
+				break;
+
+      case 'a':
+				gameData.currentDirection = LEFT;
+        break;
+
+      case 's':
+				gameData.currentDirection = DOWN;
+        break;
+
+      case 'd':
+        gameData.currentDirection = LEFT;
+        break;
+
+      case 'e':
+        return 0;
+    }
+  }
+
+	return 0;
 }
 

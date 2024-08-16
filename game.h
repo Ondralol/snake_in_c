@@ -1,5 +1,7 @@
 #pragma once
 #include <stddef.h>
+#include "display.h"
+
 
 void runGame(size_t , size_t );
 
