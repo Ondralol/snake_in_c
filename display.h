@@ -1,26 +1,7 @@
 #pragma once
 #include <stdbool.h>
 #include <stddef.h>
-
-typedef struct pos
-{
-	int x;
-	int y;
-} position;
-
-
-typedef enum dir
-{
-	UP, DOWN, RIGHT, LEFT
-} direction;
-
-typedef struct snake
-{
-	direction currentDirection;
-	position head;
-	position tail;
-} snake;
-
+#include "deque.h"
 
 void displayTiles(size_t, size_t, size_t, size_t);
 

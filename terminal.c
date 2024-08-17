@@ -59,6 +59,17 @@ void TChangeSettings(const char * str)
 	fflush(stdout);
 }
 
+void TRGBBackground (size_t r, size_t g, size_t b)
+{
+	printf("\033[48;2;%zu;%zu;%zum", r,g,b);
+	fflush(stdout);
+}
+
+void TRGBForeground (size_t r, size_t g, size_t b)
+{
+  printf("\033[38;2;%zu;%zu;%zum", r,g,b);
+  fflush(stdout);
+}
 
 void TCursorReset ()
 {

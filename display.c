@@ -47,45 +47,93 @@ void displayTiles(size_t width, size_t height, size_t x, size_t y)
 	/* Turning off buffer */
 	//setvbuf(stdout, NULL, _IONBF, 0);
 
-	/* White background */
-
-	TCursorMoveXY(x/2 - (width*4 + width*2 + 1)/2 + 1, y / 2 - (height * 2 + height + 1)/2 );	
-	TChangeSettings(TBWHITE);
-	for (int i = 0; i < height*2 + height + 1; i ++)
+	/* Printing border */
+	TCursorMoveXY(x/2 - width * 2 - 1, y/2 - height - 1 );
+	TChangeSettings(THIBLACK);
+	
+	printf("█");
+	for ( int i = 0; i < width; i ++ )
+		printf("████");
+	printf("███");
+	
+	for ( int i = 0; i < height * 2; i ++)
 	{
-		for (int j = 0; j < width + width / 2; j++)
+		TCursorMoveXY(x/2 - width * 2 - 1, y/2 - height  + i);
+		printf("██");
+		TCursorMoveXY(x/2 - width * 2 + width * 4 + 1, y/2 - height  + i);
+    printf("██");
+	}
+	
+	TCursorMoveXY(x/2 - width * 2 - 1, y/2 - height + height * 2 );
+
+	printf("█");
+	for ( int i = 0; i < width; i ++ )
+    printf("████");
+  printf("███");
+
+	
+
+	/* Printing the pattern */
+
+	TCursorDownLines(1);
+	TCursorMoveXY(x/2 - width * 2 + 1, y/2 - height);	
+	TChangeSettings(THIGREEN);
+	for (int i = 0; i < height*2; i ++)
+	{
+		for (int j = 0; j < width; j++)
 		{
 			printf("████");
 			fflush(stdout);
 		}
-		printf("██");
 		printf("\n");
-		TCursorMoveRight(x/2 - (width*4 + width*2 + 1)/2);
+		TCursorMoveRight(x/2 - width * 2);
 	}
 	
 	/* Printing tiles */
   //usleep(15000);
 	//fflush(stdout);
 	//usleep(2500);
-	TCursorMoveXY(x/2 - (width*4 + width*2 + 1)/2 + 1, y / 2 - (height * 2 + height + 1)/2  + 1);
-	TChangeSettings(TBGREEN);
-	TCursorMoveRight(2);
-	for (int i = 0; i < height * 2; i ++)
+	
+	    
+	TCursorMoveXY(x/2 - width * 2 + 1, y/2 - height); 
+	TChangeSettings(TRGREEN);
+	//problem with odd numbers
+	for (int i = 0; i < height; i ++)
   {
-		for (int j = 0; j < width ; j ++ )
+    for (int j = 0; j < width/2; j++)
     {
-		  printf("████");
-			TCursorMoveRight(2);
-			//usleep(10000);
-		}
+      if ( i % 2 == 0 )
+			{
+				printf("████");
+				TCursorMoveRight(4);
+			}
+			else
+			{
+        TCursorMoveRight(4);
+				printf("████");
+			}
+    }
     printf("\n");
-    if (i %2 != 0)
-			TCursorDownLines(1);
-		TCursorMoveRight(x/2 - (width*4 + width*2 + 1)/2 + 2);
-  	//if ( i == height )
-		//	usleep(1500);
-		
-	}
+    TCursorMoveRight(x/2 - width * 2);
+  	
+		for (int j = 0; j < width/2; j++)
+    {
+      if ( i % 2 == 0 )
+      {
+        printf("████");
+        TCursorMoveRight(4);
+      }
+			else
+      {
+        TCursorMoveRight(4);
+        printf("████");
+      }
+    }
+		printf("\n");
+    TCursorMoveRight(x/2 - width * 2);
+
+	}	
+	
 	
 }
 
@@ -159,47 +207,59 @@ void displaySnake(size_t width, size_t height, snake * gameData)
 {
 	int x, y;
 	TGetTerminalSize(&x,&y);
-
-	if ( (gameData->head).x == 0 && (gameData->head).y == 0 )
-	{
-		(gameData->head).x = x/2 - (width*4 + width*2 + 1)/2 + 3;
-		(gameData->head).y = y / 2 - (height * 2 + height)/2 + 1;
+	//TODO random
+  if ( gameData -> head == NULL )
+  {
+    gameData -> head = dequeAddFront(gameData -> head, x/2 - width * 2 + 1 + width / 2 * 4, y/2 - height + height);
 	}
 
 	
-	if ( gameData -> currentDirection == UP )
-		(gameData->head).y -= 3;
+	if ( gameData ->  currentDirection == UP )
+		gameData -> head = dequeAddFront(gameData -> head, gameData -> head -> x, gameData -> head -> y - 2);
 	
 	else if ( gameData -> currentDirection == DOWN )
-		(gameData->head).y += 3;
+		gameData -> head = dequeAddFront(gameData -> head, gameData -> head -> x, gameData -> head -> y + 2);
 
 	else if ( gameData -> currentDirection == RIGHT )
-		(gameData->head).x += 6;
+		gameData -> head = dequeAddFront(gameData -> head, gameData -> head -> x + 4, gameData -> head -> y);
 	
 	else if ( gameData -> currentDirection == LEFT )
-		(gameData->head).x -= 6;
+		gameData -> head = dequeAddFront(gameData -> head, gameData -> head -> x - 4, gameData -> head -> y);
 
-
-	TCursorMoveXY((gameData->head).x, (gameData->head).y);
-	TChangeSettings(THIYELLOW);
+	TCursorMoveXY(gameData -> head -> x, gameData -> head -> y);
+	//TChangeSettings(TBBLUE);
+	TRGBForeground(0,0,139);
 	printf("████");
-	TCursorMoveXY((gameData->head).x, (gameData->head).y + 1);
+	TCursorMoveXY( gameData -> head -> x, gameData->head -> y + 1);
 	printf("████");
-	TCursorMoveXY((gameData->tail).x, (gameData->tail).y);
 	
-	if ( (gameData->tail).x != 0 && (gameData->tail).y != 0 )
+	
+	if ( gameData->tail != NULL )
 	{
-		TChangeSettings(TBGREEN);
+		//if no apple TODO
+		/* Restores screen after snake*/
+		TCursorMoveXY(x/2 - width * 2 + 1, y/2 - height);
+		if ( (gameData -> tail -> x - (x/2 - width * 2 + 1) ) % 8 == 0 && (gameData -> tail -> y - (y/2 - height) ) % 4 == 0 ) 
+			TChangeSettings(TBGREEN);
+		else if ( (gameData -> tail -> x + 4 - (x/2 - width * 2 + 1) ) % 8 == 0 && (gameData -> tail -> y + 2 - (y/2 - height) ) % 4 == 0 ) 
+			TChangeSettings(TBGREEN);
+		else
+			TChangeSettings(THIGREEN);
+		
+		TCursorMoveXY( gameData -> tail -> x, gameData -> tail -> y);
 		printf("████");
-		TCursorMoveXY((gameData->tail).x, (gameData->tail).y +1);
-		printf("████");
+		TCursorMoveXY( gameData -> tail -> x, gameData -> tail -> y +1);
+		printf("████");	
 	}
+	
+	gameData -> tail = dequeTail(gameData -> head);
 
-	(gameData->tail).x = (gameData->head).x;
-	(gameData->tail).y = (gameData->head).y;
+	gameData -> tail -> x = gameData -> head -> x;
+	gameData -> tail -> y = gameData -> head -> y;
 
 
 	TChangeSettings(TRESET);
+	fflush(stdout);
 }
 
 

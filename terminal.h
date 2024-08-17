@@ -75,6 +75,10 @@ void TReset(struct termios * settings);
 
 void TChangeSettings(const char *);
 
+void TRGBBackground(size_t r, size_t g, size_t b);
+
+void TRGBForeground (size_t r, size_t g, size_t b);
+
 void TCursorReset ();
 
 void TCursorMoveXY(int x, int y);

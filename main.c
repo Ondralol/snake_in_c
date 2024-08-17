@@ -9,8 +9,9 @@
 #include "game.h"
 #include "terminal.h"
 
-#define WIDTH	10
-#define HEIGHT 10
+/* For now requires even numbers */
+#define WIDTH	14
+#define HEIGHT 14
 #define SNAKECHARACTER 100 /* TODO */
 
 /* Only using single global variable for signal handling as there is no better way */

@@ -4,7 +4,7 @@
 #include <signal.h>
 #include "game.h"
 #include "display.h"
-
+#include "deque.h"
 
 /* TODO */ 
 
@@ -80,16 +80,20 @@ int menuLogic(size_t score)
 	return 0;
 }
 
+void clearBuffer()
+{
+	int c;
+	while ( (c = getchar()) != EOF );
+}
+
 int gameLogic(size_t x, size_t y, size_t * score)
 {
 	snake gameData;
-	
+	//TODO RANDOM
 	gameData.currentDirection = DOWN;
-	gameData.head.x = 0;
-	gameData.head.y = 0;
-	gameData.tail.x = 0;
-	gameData.tail.y = 0;
-
+	gameData.head = NULL;
+	gameData.tail = NULL;
+	gameData.colour = 254;
 
 
 	displayGame(x, y, score);
@@ -103,7 +107,7 @@ int gameLogic(size_t x, size_t y, size_t * score)
 			displayGame(x, y, score);
 			
 
-		if ( timer == 14 )
+		if ( timer == 10 )
 		{
 			timer = 0;
 			displaySnake(x, y, &gameData);
@@ -116,9 +120,11 @@ int gameLogic(size_t x, size_t y, size_t * score)
 				if ( gameData.currentDirection != UP )
 				{
 					gameData.currentDirection = UP;
+					usleep(5000 * (10 - timer));
+					displaySnake(x, y, &gameData);
 					//usleep(20000);
-					//displaySnake(x, y, &gameData);
-					//usleep(20000);
+					timer = 0;	
+					clearBuffer();
 				}
 				break;
 
@@ -127,9 +133,11 @@ int gameLogic(size_t x, size_t y, size_t * score)
 				if ( gameData.currentDirection != LEFT )
 				{
 					gameData.currentDirection = LEFT;
+					usleep(5000 * (10 - timer));
+					displaySnake(x, y, &gameData);
 					//usleep(20000);
-					//displaySnake(x, y, &gameData);
-					//usleep(20000);
+					timer = 0;
+					clearBuffer();
 				}
 				break;
 
@@ -138,9 +146,11 @@ int gameLogic(size_t x, size_t y, size_t * score)
 				if ( gameData.currentDirection != DOWN )
 				{
 					gameData.currentDirection = DOWN;
+					usleep(5000 * (10 - timer));
+					displaySnake(x, y, &gameData);
 					//usleep(20000);
-					//displaySnake(x, y, &gameData);
-					//usleep(20000);
+					timer = 0;
+					clearBuffer();
 				}
 				break;
 
@@ -149,22 +159,26 @@ int gameLogic(size_t x, size_t y, size_t * score)
 				if ( gameData.currentDirection != RIGHT )
 				{
 					gameData.currentDirection = RIGHT;
+					usleep(5000 * (10 - timer) );
+					displaySnake(x, y, &gameData);
 					//usleep(20000);
-					//displaySnake(x, y, &gameData);
-					//usleep(20000);
+					timer = 0;
+					clearBuffer();
 				}
 				break;
 
 			case 'E':
 			case 'e':
+				dequeFree(gameData.head);
 				return 0;
 
 			case 'P':
 			case 'p':
-				return 1;
+				sleep(1000);
+				;
 		}
 		fflush(stdout);
-		usleep(20000);
+		usleep(40000);
 	}
 	
 	return 0;
