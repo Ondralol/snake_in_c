@@ -9,8 +9,8 @@
 #include "game.h"
 #include "terminal.h"
 
-#define WIDTH	42
-#define HEIGHT 24
+#define WIDTH	10
+#define HEIGHT 10
 #define SNAKECHARACTER 100 /* TODO */
 
 /* Only using single global variable for signal handling as there is no better way */
@@ -18,7 +18,7 @@ bool signalVal;
 
 int main (int argc, char ** argv)
 {
-	
+
 	size_t width = WIDTH;
 	size_t height = HEIGHT;
 	

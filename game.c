@@ -88,7 +88,7 @@ int gameLogic(size_t x, size_t y, size_t * score)
 	gameData.head.x = 0;
 	gameData.head.y = 0;
 	gameData.tail.x = 0;
-  gameData.tail.y = 0;
+	gameData.tail.y = 0;
 
 
 
@@ -103,7 +103,7 @@ int gameLogic(size_t x, size_t y, size_t * score)
 			displayGame(x, y, score);
 			
 
-		if ( timer == 1 )
+		if ( timer == 10 )
 		{
 			timer = 0;
 			displaySnake(x, y, &gameData);
@@ -123,28 +123,28 @@ int gameLogic(size_t x, size_t y, size_t * score)
 			case 'A':
 			case 'a':
 				if ( gameData.currentDirection != LEFT )
-        {
-          gameData.currentDirection = LEFT;
-          displaySnake(x, y, &gameData);
-        }
+				{
+					gameData.currentDirection = LEFT;
+					displaySnake(x, y, &gameData);
+				}
 				break;
 
 			case 'S':
 			case 's':
 				if ( gameData.currentDirection != DOWN )
-        {
-          gameData.currentDirection = DOWN;
-          displaySnake(x, y, &gameData);
-        }
+				{
+					gameData.currentDirection = DOWN;
+					displaySnake(x, y, &gameData);
+				}
 				break;
 
 			case 'D':
 			case 'd':
 				if ( gameData.currentDirection != RIGHT )
-        {
-          gameData.currentDirection = RIGHT;
-          displaySnake(x, y, &gameData);
-        }
+				{
+					gameData.currentDirection = RIGHT;
+					displaySnake(x, y, &gameData);
+				}
 				break;
 
 			case 'E':

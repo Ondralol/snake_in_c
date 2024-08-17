@@ -41,6 +41,54 @@ void displayBorders(const char * colour)
 	TChangeSettings(TRESET);
 }
 
+/* Width and height of the game screen, x and y represent size of the terminal window */
+void displayTiles(size_t width, size_t height, size_t x, size_t y)
+{
+	/* Turning off buffer */
+	//setvbuf(stdout, NULL, _IONBF, 0);
+
+	/* White background */
+
+	TCursorMoveXY(x/2 - (width*4 + width*2 + 1)/2 + 1, y / 2 - (height * 2 + height + 1)/2 );	
+	TChangeSettings(TBWHITE);
+	for (int i = 0; i < height*2 + height + 1; i ++)
+	{
+		for (int j = 0; j < width + width / 2; j++)
+		{
+			printf("████");
+			fflush(stdout);
+		}
+		printf("██");
+		printf("\n");
+		TCursorMoveRight(x/2 - (width*4 + width*2 + 1)/2);
+	}
+	
+	/* Printing tiles */
+  //usleep(15000);
+	//fflush(stdout);
+	//usleep(2500);
+	TCursorMoveXY(x/2 - (width*4 + width*2 + 1)/2 + 1, y / 2 - (height * 2 + height + 1)/2  + 1);
+	TChangeSettings(TBGREEN);
+	TCursorMoveRight(2);
+	for (int i = 0; i < height * 2; i ++)
+  {
+		for (int j = 0; j < width ; j ++ )
+    {
+		  printf("████");
+			TCursorMoveRight(2);
+			//usleep(10000);
+		}
+    printf("\n");
+    if (i %2 != 0)
+			TCursorDownLines(1);
+		TCursorMoveRight(x/2 - (width*4 + width*2 + 1)/2 + 2);
+  	//if ( i == height )
+		//	usleep(1500);
+		
+	}
+	
+}
+
 /* Pass score as argument somehow???*/
 void displayMenu()
 {
@@ -92,40 +140,14 @@ void displayGame(size_t width, size_t height, size_t * score )
 	signalVal = 0;
 	
 	int x, y;
-  TGetTerminalSize(&x,&y);
+	TGetTerminalSize(&x,&y);
 	
 	displayBorders(TBWHITE);
 	
-	TChangeSettings(THIBLACK);
-	TCursorMoveXY((x - width) / 2 + 1, (y - height) / 2);
-	
 	/* Game borders */
-	
-	for (int i = 0; i < width; i ++)
-	{
-		printf("▄");
-	}
-	TCursorMoveXY((x - width) / 2 + 1, (y - height) / 2 + 1);	
-	
-	
-	for (int i = 0; i < height - 2; i ++)
-	{
-		printf("█");
-		TChangeSettings(TBWHITE);
-		for (int j = 0; j < width -2; j++)
-		{
-			printf(".");
-		}
-		TChangeSettings(THIBLACK);
-		printf("█");
-		TCursorDownLines(1);
-		TCursorMoveRight( (x-width) / 2);
-	}	
-	
-	for (int i = 0; i < width; i ++)
-	{
-		printf("▀");
-	}
+	displayTiles(width, height, x, y);
+
+
 	TCursorDownLines(2);	
 	TCursorMoveRight((x)/2 - 5);
 	TChangeSettings(TBGREEN);
@@ -136,7 +158,7 @@ void displayGame(size_t width, size_t height, size_t * score )
 void displaySnake(size_t width, size_t height, snake * gameData)
 {
 	int x, y;
-  TGetTerminalSize(&x,&y);
+	TGetTerminalSize(&x,&y);
 
 	if ( (gameData->head).x == 0 && (gameData->head).y == 0 )
 	{
@@ -149,13 +171,13 @@ void displaySnake(size_t width, size_t height, snake * gameData)
 		(gameData->head).y -= 1;
 	
 	else if ( gameData -> currentDirection == DOWN )
-    (gameData->head).y += 1;
+		(gameData->head).y += 1;
 
 	else if ( gameData -> currentDirection == RIGHT )
 		(gameData->head).x +=1;
 	
 	else if ( gameData -> currentDirection == LEFT )
-    (gameData->head).x -= 1;
+		(gameData->head).x -= 1;
 
 
 	TCursorMoveXY((gameData->head).x, (gameData->head).y);
@@ -164,13 +186,13 @@ void displaySnake(size_t width, size_t height, snake * gameData)
 	TCursorMoveXY((gameData->tail).x, (gameData->tail).y);
 	
 	if ( (gameData->tail).x != 0 && (gameData->tail).y != 0 )
-  {
+	{
 		TChangeSettings(TBWHITE);
 		printf(".");
 	}
 
 	(gameData->tail).x = (gameData->head).x;
-  (gameData->tail).y = (gameData->head).y;
+	(gameData->tail).y = (gameData->head).y;
 
 
 	TChangeSettings(TRESET);

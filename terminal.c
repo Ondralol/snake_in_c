@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 #include "terminal.h"
 
 
@@ -55,7 +56,7 @@ void TReset(struct termios * settings)
 void TChangeSettings(const char * str)
 {
 	printf("%s", str);
-	//fflush(stdout);
+	fflush(stdout);
 }
 
 
@@ -108,7 +109,7 @@ void TCursorDownLines(int x)
 
 void TCursorUpLines(int x)
 {
-  printf("\033[%dF", x);
+	printf("\033[%dF", x);
 	fflush(stdout);
 }
 
@@ -129,6 +130,7 @@ void TEraseLine()
 void TGetTerminalSize(int * x, int * y)
 {
 	struct winsize size;
+	usleep(1000);
 	ioctl(1, TIOCGWINSZ, &size);
 	*x = size.ws_col;
 	*y = size.ws_row;

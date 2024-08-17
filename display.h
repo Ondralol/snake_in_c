@@ -22,6 +22,7 @@ typedef struct snake
 } snake;
 
 
+void displayTiles(size_t, size_t, size_t, size_t);
 
 void windowResize();
 
