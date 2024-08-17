@@ -103,7 +103,7 @@ int gameLogic(size_t x, size_t y, size_t * score)
 			displayGame(x, y, score);
 			
 
-		if ( timer == 10 )
+		if ( timer == 14 )
 		{
 			timer = 0;
 			displaySnake(x, y, &gameData);
@@ -116,7 +116,9 @@ int gameLogic(size_t x, size_t y, size_t * score)
 				if ( gameData.currentDirection != UP )
 				{
 					gameData.currentDirection = UP;
-					displaySnake(x, y, &gameData);
+					//usleep(20000);
+					//displaySnake(x, y, &gameData);
+					//usleep(20000);
 				}
 				break;
 
@@ -125,7 +127,9 @@ int gameLogic(size_t x, size_t y, size_t * score)
 				if ( gameData.currentDirection != LEFT )
 				{
 					gameData.currentDirection = LEFT;
-					displaySnake(x, y, &gameData);
+					//usleep(20000);
+					//displaySnake(x, y, &gameData);
+					//usleep(20000);
 				}
 				break;
 
@@ -134,7 +138,9 @@ int gameLogic(size_t x, size_t y, size_t * score)
 				if ( gameData.currentDirection != DOWN )
 				{
 					gameData.currentDirection = DOWN;
-					displaySnake(x, y, &gameData);
+					//usleep(20000);
+					//displaySnake(x, y, &gameData);
+					//usleep(20000);
 				}
 				break;
 
@@ -143,7 +149,9 @@ int gameLogic(size_t x, size_t y, size_t * score)
 				if ( gameData.currentDirection != RIGHT )
 				{
 					gameData.currentDirection = RIGHT;
-					displaySnake(x, y, &gameData);
+					//usleep(20000);
+					//displaySnake(x, y, &gameData);
+					//usleep(20000);
 				}
 				break;
 
@@ -156,7 +164,7 @@ int gameLogic(size_t x, size_t y, size_t * score)
 				return 1;
 		}
 		fflush(stdout);
-		usleep(10000);
+		usleep(20000);
 	}
 	
 	return 0;

@@ -162,33 +162,37 @@ void displaySnake(size_t width, size_t height, snake * gameData)
 
 	if ( (gameData->head).x == 0 && (gameData->head).y == 0 )
 	{
-		(gameData->head).x = x / 2;
-		(gameData->head).y = y / 2;
+		(gameData->head).x = x/2 - (width*4 + width*2 + 1)/2 + 3;
+		(gameData->head).y = y / 2 - (height * 2 + height)/2 + 1;
 	}
 
 	
 	if ( gameData -> currentDirection == UP )
-		(gameData->head).y -= 1;
+		(gameData->head).y -= 3;
 	
 	else if ( gameData -> currentDirection == DOWN )
-		(gameData->head).y += 1;
+		(gameData->head).y += 3;
 
 	else if ( gameData -> currentDirection == RIGHT )
-		(gameData->head).x +=1;
+		(gameData->head).x += 6;
 	
 	else if ( gameData -> currentDirection == LEFT )
-		(gameData->head).x -= 1;
+		(gameData->head).x -= 6;
 
 
 	TCursorMoveXY((gameData->head).x, (gameData->head).y);
 	TChangeSettings(THIYELLOW);
-	printf("▄");
+	printf("████");
+	TCursorMoveXY((gameData->head).x, (gameData->head).y + 1);
+	printf("████");
 	TCursorMoveXY((gameData->tail).x, (gameData->tail).y);
 	
 	if ( (gameData->tail).x != 0 && (gameData->tail).y != 0 )
 	{
-		TChangeSettings(TBWHITE);
-		printf(".");
+		TChangeSettings(TBGREEN);
+		printf("████");
+		TCursorMoveXY((gameData->tail).x, (gameData->tail).y +1);
+		printf("████");
 	}
 
 	(gameData->tail).x = (gameData->head).x;
