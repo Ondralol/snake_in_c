@@ -1,6 +1,7 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include "deque.h"
-
+#include "terminal.h"
 
 void dequeFree(snakePositionDeque * head)
 {
@@ -37,6 +38,8 @@ snakePositionDeque * dequeAddFront(snakePositionDeque * head, int x, int y)
 	new -> y = y;
 	new -> prev = head;
 	new -> next = NULL;
+	if ( head != NULL )
+		head -> next = new;
 	return new;
 }
 
@@ -46,7 +49,7 @@ bool dequeFindPosition(snakePositionDeque * head, int x, int y)
 	{
 		if (head -> x == x && head -> y == y)
 			return true;
-		head = head -> next;
+		head = head -> prev;
 	}
 	return false;
 }
@@ -61,3 +64,9 @@ snakePositionDeque * dequeTail(snakePositionDeque * head)
 	}
 	return prev;
 }
+
+
+
+
+
+

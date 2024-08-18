@@ -11,6 +11,14 @@ void displayBorders(const char * colour);
 
 void displayMenu();
 
+void displaySnakeAll(snake * gameData, int width, int height);
+
+void displaySnakeTile(int width, int height, int tileX, int tileY, int r, int g, int b);
+
+bool displaySnake(size_t width, size_t height, snake * gameData);
+
 void displayGame(size_t width, size_t height, size_t * score);
 
-void displaySnake(size_t width, size_t height, snake * gameData);
+void displayStartGame(size_t width, size_t height, snake * gameData);
+
+void displayGameOver();

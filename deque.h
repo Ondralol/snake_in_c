@@ -8,6 +8,7 @@ typedef enum dir
 } direction;
 
 /* Using deque to represent tile positions */
+/* X, Y corresponds to tile position */
 typedef struct snakePosDeque
 {
 	int x;
@@ -21,6 +22,8 @@ typedef struct snake
   direction currentDirection;
   snakePositionDeque * head;
   snakePositionDeque * tail;
+	int appleX;
+	int appleY;
 	size_t colour;
 } snake;
 
@@ -35,4 +38,3 @@ snakePositionDeque * dequeAddFront(snakePositionDeque * head, int x, int y);
 snakePositionDeque * dequeTail(snakePositionDeque * head);
 
 bool dequeFindPosition(snakePositionDeque * head, int x, int y);
-
