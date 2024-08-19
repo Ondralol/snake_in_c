@@ -28,10 +28,10 @@ void displayBorders(const char * colour)
 	/* Prints borders */
 
 	TChangeSettings(colour);
-	for ( int i = 0; i < x; i ++)
+	for (int i = 0; i < x; i ++)
 		printf("▀");
 
-	for ( int i = 1; i < y; i ++ )
+	for (int i = 1; i < y; i ++)
 	{
 		TCursorMoveXY(0,i);
 		printf("█");
@@ -39,7 +39,7 @@ void displayBorders(const char * colour)
 		printf("█");
 	}
 	TCursorMoveXY(0,y);
-	for ( int i = 0; i < x; i ++) 
+	for (int i = 0; i < x; i ++) 
 		printf("▀");
 
 	fflush(stdout);
@@ -129,7 +129,7 @@ void displaySnakeAll(snake * gameData, int width, int height)
 {
 	snakePositionDeque * head = gameData -> head;
 	bool first = 1;
-	while ( head )
+	while (head)
 	{
 		if (first)
 			displaySnakeTile(width, height, head -> x, head -> y, 0, 0, 128);
@@ -154,7 +154,7 @@ void displayTiles(size_t width, size_t height, size_t x, size_t y)
 		printf("████");
 	printf("███");
 	
-	for ( int i = 0; i < height * 2; i ++)
+	for (int i = 0; i < height * 2; i ++)
 	{
 		TCursorMoveXY(x/2 - width * 2 - 1, y/2 - height  + i);
 		printf("██");
@@ -194,7 +194,7 @@ void displayTiles(size_t width, size_t height, size_t x, size_t y)
   {
 		for (int j = 0; j < width / 2; j++)
     {
-      if ( i % 2 == 0 )
+      if (i % 2 == 0)
 			{
 				printf("████");
 				TCursorMoveRight(4);
@@ -210,7 +210,7 @@ void displayTiles(size_t width, size_t height, size_t x, size_t y)
   	
 		for (int j = 0; j < width / 2; j++)
     {
-      if ( i % 2 == 0 )
+      if (i % 2 == 0)
       {
         printf("████");
         TCursorMoveRight(4);
@@ -315,7 +315,7 @@ bool displaySnake(size_t width, size_t height, snake * gameData)
 	TGetTerminalSize(&x,&y);
 	
 	/* Spawns the first apple */
-	if ( gameData -> appleX == -1 )
+	if (gameData -> appleX == -1)
 	{
 		gameData -> appleX = rand() % width;
     gameData -> appleY = rand() % height;
@@ -325,7 +325,7 @@ bool displaySnake(size_t width, size_t height, snake * gameData)
 	displaySnakeTile(width, height, gameData -> appleX, gameData -> appleY, 255,0,0);
 
   /* If there is no head */
-	if ( gameData -> head == NULL )
+	if (gameData -> head == NULL)
   {
 		displayStartGame(width, height, gameData);
 	}
@@ -334,20 +334,20 @@ bool displaySnake(size_t width, size_t height, snake * gameData)
 	displaySnakeTile(width, height, gameData -> head -> x, gameData -> head -> y, 8,24,168);
 
 	/* Updates snakes position based on direction */
-	if ( gameData ->  currentDirection == UP )
+	if (gameData ->  currentDirection == UP)
 		gameData -> head = dequeAddFront(gameData -> head, gameData -> head -> x, gameData -> head -> y - 1);
 	
-	else if ( gameData -> currentDirection == DOWN )
+	else if (gameData -> currentDirection == DOWN)
 		gameData -> head = dequeAddFront(gameData -> head, gameData -> head -> x, gameData -> head -> y + 1);
 
-	else if ( gameData -> currentDirection == RIGHT )
+	else if (gameData -> currentDirection == RIGHT)
 		gameData -> head = dequeAddFront(gameData -> head, gameData -> head -> x + 1, gameData -> head -> y);
 	
-	else if ( gameData -> currentDirection == LEFT )
+	else if (gameData -> currentDirection == LEFT)
 		gameData -> head = dequeAddFront(gameData -> head, gameData -> head -> x - 1, gameData -> head -> y);
 
 	/* Checks for collision with wall */
-	if ( gameData -> head -> x < 0 || gameData -> head -> x >= width || gameData -> head -> y < 0 || gameData -> head -> y >= height )
+	if (gameData -> head -> x < 0 || gameData -> head -> x >= width || gameData -> head -> y < 0 || gameData -> head -> y >= height)
 	{
 		displaySnakeTile(width, height, gameData -> head -> x, gameData -> head -> y, 128, 0, 0);
 		return false;
@@ -364,7 +364,7 @@ bool displaySnake(size_t width, size_t height, snake * gameData)
 	/* Check for snake collision */
 
 	
-	if ( gameData->tail != NULL )
+	if (gameData->tail != NULL)
 	{
 		/* If snake ate apple, spawn new one */
 		if ( dequeFindPosition(gameData -> head, gameData -> appleX, gameData -> appleY))
@@ -378,9 +378,9 @@ bool displaySnake(size_t width, size_t height, snake * gameData)
 		else
 		{
 			/* Simple logic so the chess pattern is preserved */
-			if ( gameData -> tail -> y % 2 == 0 && gameData -> tail -> x % 2 == 0 ) 
+			if (gameData -> tail -> y % 2 == 0 && gameData -> tail -> x % 2 == 0) 
 				displaySnakeTile(width, height, gameData -> tail -> x, gameData -> tail -> y, 38, 162, 105);
-			else if ( gameData -> tail -> y % 2 != 0 && gameData -> tail -> x % 2 != 0) 
+			else if (gameData -> tail -> y % 2 != 0 && gameData -> tail -> x % 2 != 0) 
 				displaySnakeTile(width, height, gameData -> tail -> x, gameData -> tail -> y, 38, 162, 105);
 			else
 				displaySnakeTile(width, height, gameData -> tail -> x, gameData -> tail -> y, 51, 218, 122);	

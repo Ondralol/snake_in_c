@@ -24,7 +24,7 @@ int main (int argc, char ** argv)
 	size_t height = HEIGHT;
 
 	/* Custom width and height */
-	if ( argc == 3 )
+	if (argc == 3)
 	{
 		strToNum(&width, argv[1]);
 		strToNum(&height, argv[2]);

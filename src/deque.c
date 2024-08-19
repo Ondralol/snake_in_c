@@ -18,9 +18,9 @@ void dequeFree(snakePositionDeque * head)
 snakePositionDeque * dequePopBack(snakePositionDeque * tail)
 {
 	snakePositionDeque * next;
-	if ( tail != NULL)
+	if (tail != NULL)
 	{
-		if ( tail -> next )
+		if (tail -> next)
 		{
 			next = tail -> next;
 			next -> prev = NULL;
@@ -47,7 +47,7 @@ snakePositionDeque * dequeAddFront(snakePositionDeque * head, int x, int y)
 /* Retuns true if found and false if not found */
 bool dequeFindPosition(snakePositionDeque * head, int x, int y)
 {
-	while ( head )
+	while (head)
 	{
 		if (head -> x == x && head -> y == y)
 			return true;
@@ -67,8 +67,6 @@ snakePositionDeque * dequeTail(snakePositionDeque * head)
 	}
 	return prev;
 }
-
-
 
 
 

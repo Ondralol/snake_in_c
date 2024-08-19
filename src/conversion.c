@@ -16,9 +16,9 @@ bool strToNum(size_t * value, char * str )
 	size_t len = strlen(str);
 	for ( int i = len - 1; i >=0 ; i -- )
 	{
-		if ( !isdigit(str[i]) )
+		if (!isdigit(str[i]))
 			break;
-		newValue += ( str[i] - '0') * mult;
+		newValue += (str[i] - '0') * mult;
 		mult *= 10;
 		seenDigit = 1;
 	}

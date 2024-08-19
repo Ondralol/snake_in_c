@@ -38,12 +38,12 @@ int menuLogic(size_t score)
 	while (true)
 	{
 		/* If ctrl C was pressed */
-		if ( signalVal == 2 )
+		if (signalVal == 2)
 			return 0;
 		
 		/* Checks for window resize */
 		signal(SIGWINCH, &windowResize);
-		if ( signalVal == 1 )
+		if (signalVal == 1)
 			displayMenu();
 			
 		c = getchar();
@@ -94,7 +94,7 @@ int menuLogic(size_t score)
 void clearBuffer()
 {
 	int c;
-	while ( (c = getchar()) != EOF );
+	while ((c = getchar()) != EOF);
 }
 
 /* Input logic for paused game */
@@ -110,12 +110,12 @@ int pauseLogic(size_t width, size_t height, snake * gameData)
 	while (true)
   {
     /* If ctrl C was pressed */
-		if ( signalVal == 2 )
+		if (signalVal == 2)
       return -1;
 
 		/* Checks for window resizing */
 		signal(SIGWINCH, &windowResize);
-    if ( signalVal == 1 )
+    if (signalVal == 1)
 		{
 			/* Displaying all information thats needed */
 			screenChange = true;
@@ -164,12 +164,12 @@ int gameOverLogic(size_t width, size_t height, snake * gameData)
 	while (true)
   {
     /* If 'CTRL C' was pressed*/
-		if ( signalVal == 2 )
+		if (signalVal == 2)
       return 0;
 
     /* Checks if window was resized and handles displaying the game*/
 		signal(SIGWINCH, &windowResize);
-    if ( signalVal == 1 )
+    if (signalVal == 1)
     {
       usleep(20000);
       displayGame(width, height);
@@ -239,7 +239,7 @@ int gameLogic(size_t width, size_t height,size_t * score)
 	while (true)
 	{
 		/* If 'CTRL C' was pressed*/
-		if ( signalVal == 2 )
+		if (signalVal == 2)
     {
 			dequeFree(gameData.head);
 			return 0;
@@ -259,10 +259,10 @@ int gameLogic(size_t width, size_t height,size_t * score)
 		
 		/* Using "timer" with usleep so that I can update the game screen to my needs */
 		timer ++;
-		if ( timer == 10 )
+		if (timer == 10)
 		{
 			timer = 0;
-			if ( !displaySnake(width, height, &gameData) )
+			if (!displaySnake(width, height, &gameData))
 				breakFlag = 1;;
 		}
 
@@ -292,7 +292,7 @@ int gameLogic(size_t width, size_t height,size_t * score)
 		{
 			case 'W':
 			case 'w':
-				if ( gameData.currentDirection != UP && gameData.currentDirection != DOWN)
+				if (gameData.currentDirection != UP && gameData.currentDirection != DOWN)
 				{
 					gameData.currentDirection = UP;
 					usleep(5000 * (10 - timer));
@@ -305,11 +305,11 @@ int gameLogic(size_t width, size_t height,size_t * score)
 
 			case 'A':
 			case 'a':
-				if ( gameData.currentDirection != LEFT && gameData.currentDirection != RIGHT)
+				if (gameData.currentDirection != LEFT && gameData.currentDirection != RIGHT)
 				{
 					gameData.currentDirection = LEFT;
 					usleep(5000 * (10 - timer));
-					if ( !displaySnake(width, height, &gameData) )
+					if (!displaySnake(width, height, &gameData))
 						breakFlag = 1;
 					timer = 0;
 					clearBuffer();
@@ -318,11 +318,11 @@ int gameLogic(size_t width, size_t height,size_t * score)
 
 			case 'S':
 			case 's':
-				if ( gameData.currentDirection != DOWN && gameData.currentDirection != UP)
+				if (gameData.currentDirection != DOWN && gameData.currentDirection != UP)
 				{
 					gameData.currentDirection = DOWN;
 					usleep(5000 * (10 - timer));
-					if ( !displaySnake(width, height, &gameData) )
+					if (!displaySnake(width, height, &gameData))
 						breakFlag = 1;
 					timer = 0;
 					clearBuffer();
@@ -331,11 +331,11 @@ int gameLogic(size_t width, size_t height,size_t * score)
 
 			case 'D':
 			case 'd':
-				if ( gameData.currentDirection != RIGHT && gameData.currentDirection != LEFT)
+				if (gameData.currentDirection != RIGHT && gameData.currentDirection != LEFT)
 				{
 					gameData.currentDirection = RIGHT;
 					usleep(5000 * (10 - timer) );
-					if ( !displaySnake(width, height, &gameData) )
+					if (!displaySnake(width, height, &gameData))
 						breakFlag = 1;
 					timer = 0;
 					clearBuffer();
@@ -353,7 +353,7 @@ int gameLogic(size_t width, size_t height,size_t * score)
 			case 'p':
 				clearBuffer();
 				/* Displays the pause menu and after exiting menu, if window size wasn't changed, only displays the snake and the board */
-				if ( (result = pauseLogic(width, height, &gameData)) == 1 )
+				if ((result = pauseLogic(width, height, &gameData)) == 1)
 				{
 					displayGame(width, height);
      		 	displaySnakeAll(&gameData, width, height);
