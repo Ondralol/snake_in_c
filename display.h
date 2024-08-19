@@ -17,8 +17,10 @@ void displaySnakeTile(int width, int height, int tileX, int tileY, int r, int g,
 
 bool displaySnake(size_t width, size_t height, snake * gameData);
 
-void displayGame(size_t width, size_t height, size_t * score);
+void displayGame(size_t width, size_t height);
 
 void displayStartGame(size_t width, size_t height, snake * gameData);
+
+void displayPause(size_t width, size_t height, snake * gameData);
 
 void displayGameOver();

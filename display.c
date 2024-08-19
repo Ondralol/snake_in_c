@@ -87,7 +87,7 @@ void displayMenu()
 }
 
 
-void displayGame(size_t width, size_t height, size_t * score )
+void displayGame(size_t width, size_t height)
 {
 	TClearScreen();
 	signalVal = 0;
@@ -100,11 +100,12 @@ void displayGame(size_t width, size_t height, size_t * score )
 	/* Game borders */
 	displayTiles(width, height, x, y);
 
-
+	/*
 	TCursorDownLines(2);	
 	TCursorMoveRight((x)/2 - 5);
 	TChangeSettings(TBGREEN);
 	printf("SCORE: %zu", *score);
+	*/
 	TChangeSettings(TRESET);
 }
 
@@ -127,7 +128,7 @@ void displaySnakeAll(snake * gameData, int width, int height)
 	while ( head )
 	{
 		displaySnakeTile(width, height, head -> x, head -> y, 0, 0, 139);
-		head = head -> next;
+		head = head -> prev;
 	}
 }
 
@@ -259,6 +260,47 @@ void displayStartGame(size_t width, size_t height, snake * gameData)
 	gameData -> tail = dequeTail(gameData -> head);
 }
 
+void displayPause(size_t width, size_t height, snake * gameData)
+{
+	signalVal = 0;
+	int x, y;
+  TGetTerminalSize(&x,&y);
+	
+	//TRGBBackground(255,0,0);
+	//TRGBForeground(87,74,64);
+	TChangeSettings(THIWHITE);
+	TRGBBackground(255,255,255);
+	/* Printing PAUSE in pixel ART, line by line */
+	/* First line */
+	TCursorMoveXY(x/2 - width * 2 - 1 +7, y/2 - 5 );
+	printf("██████"); TCursorMoveRight(6);printf("████"); TCursorMoveRight(4);printf("██"); TCursorMoveRight(4);printf("██");
+	TCursorMoveRight(4); printf("██████"); TCursorMoveRight(2); printf("████████");
+
+	/* Second line*/
+	TCursorMoveXY(x/2 - width * 2 - 1 +7, y/2 - 4 );
+	printf("██"); TCursorMoveRight(4);printf("██"); TCursorMoveRight(2);printf("██"); TCursorMoveRight(4);printf("██"); 
+  TCursorMoveRight(2); printf("██"); TCursorMoveRight(4); printf("██");TCursorMoveRight(2); printf("██"); TCursorMoveRight(8); printf("██");
+	
+	/* Third line*/
+	TCursorMoveXY(x/2 - width * 2 - 1 +7, y/2 - 3 );
+  printf("██████"); TCursorMoveRight(4);printf("████████"); TCursorMoveRight(2);printf("██"); TCursorMoveRight(4);printf("██");
+  TCursorMoveRight(4); printf("████");TCursorMoveRight(4); printf("██████");
+	
+	/* Fourth line*/
+	TCursorMoveXY(x/2 - width * 2 - 1 +7, y/2 - 2 );
+  printf("██"); TCursorMoveRight(8);printf("██"); TCursorMoveRight(4);printf("██"); TCursorMoveRight(2);printf("██");
+  TCursorMoveRight(4); printf("██");TCursorMoveRight(8); printf("██");TCursorMoveRight(2); printf("██");
+	
+	/* Fifth line*/
+  TCursorMoveXY(x/2 - width * 2 - 1 +7, y/2 - 1 );
+  printf("██"); TCursorMoveRight(8);printf("██"); TCursorMoveRight(4);printf("██"); TCursorMoveRight(2);printf("████████");
+  TCursorMoveRight(2); printf("██████");TCursorMoveRight(4); printf("████████");
+
+
+	TCursorMoveXY(x/2 - width * 2 - 1 + 11, y/2 + 1 );
+	TChangeSettings(THIWHITE);
+	printf("PRESS P TO CONTINUE, PRESS E TO EXIT");
+}
 
 bool displaySnake(size_t width, size_t height, snake * gameData)
 {
@@ -308,6 +350,7 @@ bool displaySnake(size_t width, size_t height, snake * gameData)
 		{
 			gameData -> appleX = rand() % width;
 			gameData -> appleY = rand() % height;
+			(gameData -> score)++;
 		}
 		else
 		{
@@ -330,6 +373,10 @@ bool displaySnake(size_t width, size_t height, snake * gameData)
 	gameData -> tail -> x = gameData -> head -> x;
 	gameData -> tail -> y = gameData -> head -> y;
  */
+	
+	TCursorMoveXY(x/2 - 5, y/2 - height - 1  + 2 * height + 3);
+ 	TChangeSettings(TBGREEN);
+  printf("SCORE: %x", gameData -> score);
 	
 
 	TChangeSettings(TRESET);

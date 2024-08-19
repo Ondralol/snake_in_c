@@ -5,6 +5,7 @@
 #include "game.h"
 #include "display.h"
 #include "deque.h"
+#include "terminal.h"
 
 /* TODO */ 
 
@@ -53,8 +54,7 @@ int menuLogic(size_t score)
 		signal(SIGWINCH, &windowResize);
 		if ( signalVal == 1 )
 			displayMenu();
-		
-		
+			
 		c = getchar();
 		switch (c)
 		{
@@ -89,8 +89,48 @@ void clearBuffer()
 	while ( (c = getchar()) != EOF );
 }
 
+int pauseLogic(size_t width, size_t height, snake * gameData)
+{
+	bool screenChange = false;
+	int x, y;
+  TGetTerminalSize(&x,&y);
+	displayPause(width, height, gameData);
+	int c;
+
+	while (true)
+  {
+    signal(SIGWINCH, &windowResize);
+    if ( signalVal == 1 )
+		{
+			screenChange = true;
+			usleep(20000);
+			displayGame(width, height);
+  		displaySnakeAll(gameData, width, height);
+  		displaySnakeTile(width, height, gameData -> appleX, gameData -> appleY, 255,0,0);
+			displayPause(width, height, gameData);
+			fflush(stdout);
+			usleep(200000);
+		}
+    c = getchar();
+    switch (c)
+    {
+      case 'P':
+			case 'p':
+      if ( screenChange )
+				return 1;
+			else
+				return 0;
+
+      case 'E':
+      case 'e':
+        return -1;
+    }
+  }
+
+}
+
 /* XY is width and height */
-int gameLogic(size_t x, size_t y, size_t * score)
+int gameLogic(size_t width, size_t height,size_t * score)
 {
 	snake gameData;
 	//TODO RANDOM
@@ -100,10 +140,12 @@ int gameLogic(size_t x, size_t y, size_t * score)
 	gameData.colour = 254;
 	gameData.appleX = -1;
 	gameData.appleY = -1;
+	gameData.score = 0;
 
-	displayGame(x, y, score);
-	displaySnake(x, y, &gameData); //maybe remove
+	displayGame(width, height);
+	displaySnake(width, height, &gameData); //maybe remove
 	int c = 0;
+	int result;
 	size_t timer = 0;
 	bool breakFlag = 0;
 	while (true)
@@ -112,8 +154,9 @@ int gameLogic(size_t x, size_t y, size_t * score)
 		signal(SIGWINCH, &windowResize);
 		if ( signalVal == 1)
 		{
-			displayGame(x, y, score);
-			displaySnakeAll(&gameData, x, y);
+			displayGame(width, height);
+			displaySnakeAll(&gameData, width, height);
+			displaySnakeTile(width, height, gameData.appleX, gameData.appleY, 255,0,0);
 			fflush(stdout);
 			usleep(200000);
 			//signalVal = 0;
@@ -122,7 +165,7 @@ int gameLogic(size_t x, size_t y, size_t * score)
 		if ( timer == 10 )
 		{
 			timer = 0;
-			if ( !displaySnake(x, y, &gameData) )
+			if ( !displaySnake(width, height, &gameData) )
 				breakFlag = 1;;
 		}
 		c = getchar();
@@ -134,7 +177,7 @@ int gameLogic(size_t x, size_t y, size_t * score)
 				{
 					gameData.currentDirection = UP;
 					usleep(5000 * (10 - timer));
-					if ( !displaySnake(x, y, &gameData) )
+					if ( !displaySnake(width, height, &gameData) )
         		breakFlag = 1;
 					//usleep(20000);
 					timer = 0;	
@@ -148,7 +191,7 @@ int gameLogic(size_t x, size_t y, size_t * score)
 				{
 					gameData.currentDirection = LEFT;
 					usleep(5000 * (10 - timer));
-					if ( !displaySnake(x, y, &gameData) )
+					if ( !displaySnake(width, height, &gameData) )
 						breakFlag = 1;
 					//usleep(20000);
 					timer = 0;
@@ -162,7 +205,7 @@ int gameLogic(size_t x, size_t y, size_t * score)
 				{
 					gameData.currentDirection = DOWN;
 					usleep(5000 * (10 - timer));
-					if ( !displaySnake(x, y, &gameData) )
+					if ( !displaySnake(width, height, &gameData) )
 						breakFlag = 1;
 					//usleep(20000);
 					timer = 0;
@@ -176,7 +219,7 @@ int gameLogic(size_t x, size_t y, size_t * score)
 				{
 					gameData.currentDirection = RIGHT;
 					usleep(5000 * (10 - timer) );
-					if ( !displaySnake(x, y, &gameData) )
+					if ( !displaySnake(width, height, &gameData) )
 						breakFlag = 1;
 					//usleep(20000);
 					timer = 0;
@@ -191,7 +234,30 @@ int gameLogic(size_t x, size_t y, size_t * score)
 
 			case 'P':
 			case 'p':
-				sleep(1000);
+				if ( (result = pauseLogic(width, height, &gameData)) == 1 )
+				{
+					displayGame(width, height);
+     		 	displaySnakeAll(&gameData, width, height);
+      		displaySnakeTile(width, height, gameData.appleX, gameData.appleY, 255,0,0);
+					fflush(stdout);
+      		usleep(200000);
+
+				}
+				else if (result == 0)
+				{	
+					int x, y;
+  				TGetTerminalSize(&x,&y);
+					displayTiles(width, height, x, y);
+					displaySnakeAll(&gameData, width, height);
+          displaySnakeTile(width, height, gameData.appleX, gameData.appleY, 255,0,0);
+          fflush(stdout);
+          usleep(200000);
+				}
+				else
+				{
+					dequeFree(gameData.head);
+					return 0;
+				}
 				;
 		}
 		if ( breakFlag )

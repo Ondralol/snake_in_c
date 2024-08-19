@@ -141,7 +141,7 @@ void TEraseLine()
 void TGetTerminalSize(int * x, int * y)
 {
 	struct winsize size;
-	usleep(1000);
+	usleep(1000); //previous 1000
 	ioctl(1, TIOCGWINSZ, &size);
 	*x = size.ws_col;
 	*y = size.ws_row;

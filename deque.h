@@ -25,6 +25,7 @@ typedef struct snake
 	int appleX;
 	int appleY;
 	size_t colour;
+	int score;
 } snake;
 
 /* Deque */
