@@ -27,14 +27,12 @@ void runGame(size_t width, size_t height)
 {
 		size_t score = 0;
 		int outputSignal = 0;
+		
+		outputSignal = menuLogic(score);
+    if (outputSignal == 0 )
+    	return;
 		while (true)
 		{
-			outputSignal = menuLogic(score);
-			if (outputSignal == 0 )
-				return;
-		 
-			//else if (outputSignal == 1)
-			
 			outputSignal = gameLogic(width, height, &score);
 
 			if (outputSignal == 0 )
@@ -352,8 +350,11 @@ int gameLogic(size_t width, size_t height,size_t * score)
 		}
 		if ( breakFlag )
 		{
+			bool result = gameOverLogic(width, height, &gameData);
 			dequeFree(gameData.head);
-			return gameOverLogic(width, height, &gameData);
+			clearBuffer();
+			usleep(200000);
+			return result;
 		}
 		fflush(stdout);
 		usleep(40000);

@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <time.h>
 #include <signal.h>
 #include "terminal.h"
 
@@ -35,6 +37,9 @@ void TSetup(struct termios * settings)
 
 	/* Changing STDIN settings - processing new line instantly and not after \n, turning off ECHO*/
 	oldSettings.c_lflag &= ~(ICANON | ECHO);
+	
+	/* For random number generation */
+	srand(time(NULL));
 
 	/* Applying new settings */
 	tcsetattr(STDIN_FILENO, TCSANOW, &oldSettings);

@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <signal.h>
+#include <math.h>
 #include <stdlib.h>
 #include <time.h>
 #include "display.h"
@@ -82,7 +83,7 @@ void displayMenu()
 	
 	TChangeSettings(TBGREEN);
 	TCursorMoveRight((x/2)-35);
-	printf("PRESS W/A/S/D TO START THE GAME, USE P TO PAUSE, E TO EXIT THE GAME"); // use esc later
+	printf("PRESS W/A/S/D or ARROWS TO START THE GAME, USE P TO PAUSE, E TO EXIT THE GAME"); // use esc later
 	TChangeSettings(TRESET);
 	fflush(stdout);
 }
@@ -195,10 +196,10 @@ void displayTiles(size_t width, size_t height, size_t x, size_t y)
 	    
 	TCursorMoveXY(x/2 - width * 2 + 1, y/2 - height); 
 	TChangeSettings(TRGREEN);
-	//problem with odd numbers
 	for (int i = 0; i < height; i ++)
   {
-    for (int j = 0; j < width/2; j++)
+    /* Need to fix for odd numbers */
+		for (int j = 0; j < width / 2; j++)
     {
       if ( i % 2 == 0 )
 			{
@@ -214,7 +215,7 @@ void displayTiles(size_t width, size_t height, size_t x, size_t y)
     printf("\n");
     TCursorMoveRight(x/2 - width * 2);
   	
-		for (int j = 0; j < width/2; j++)
+		for (int j = 0; j < width / 2; j++)
     {
       if ( i % 2 == 0 )
       {
@@ -242,6 +243,11 @@ void displayStartGame(size_t width, size_t height, snake * gameData)
   TGetTerminalSize(&x,&y);
 
 
+	TCursorMoveXY(x/2 - 5, y/2 - height - 1  + 2 * height + 3);
+  TChangeSettings(TBGREEN);
+  printf("SCORE: %x", gameData -> score);
+
+	
 	gameData -> head = dequeAddFront(gameData -> head,  width / 2, height / 2 - 2);
 	
 	displaySnakeTile(width, height, gameData -> head -> x, gameData -> head -> y,8,24,168);
@@ -263,8 +269,9 @@ void displayStartGame(size_t width, size_t height, snake * gameData)
 	fflush(stdout);
   usleep(100000);
 	usleep(2);
-
+	
 	gameData -> tail = dequeTail(gameData -> head);
+
 }
 
 void displayPause(size_t width, size_t height, snake * gameData)
@@ -311,7 +318,6 @@ void displayPause(size_t width, size_t height, snake * gameData)
 
 bool displaySnake(size_t width, size_t height, snake * gameData)
 {
-	srand(time(NULL));
 	int x, y;
 	TGetTerminalSize(&x,&y);
 	
@@ -358,6 +364,7 @@ bool displaySnake(size_t width, size_t height, snake * gameData)
 	{
 		if ( dequeFindPosition(gameData -> head, gameData -> appleX, gameData -> appleY))
 		{
+			displaySnakeAll(gameData, width, height);
 			gameData -> appleX = rand() % width;
 			gameData -> appleY = rand() % height;
 			(gameData -> score)++;
@@ -395,10 +402,83 @@ bool displaySnake(size_t width, size_t height, snake * gameData)
 }
 
 
-void displayGameOver()
+void displayGameOver(size_t width, size_t height, snake * gameData)
 {
-	
+	signalVal = 0;
+  int x, y;
+  TGetTerminalSize(&x,&y);
+
+  //TRGBBackground(255,0,0);
+  //TRGBForeground(87,74,64);
+  TChangeSettings(THIWHITE);
+  //TRGBBackground(255,255,255);
+  /* Printing PAUSE in pixel ART, line by line */
+			
+	/* 1st line */
+  TCursorMoveXY(x/2 - width * 2 - 1 +11, y/2 - 8 );
+  TCursorMoveRight(2);printf("██████"); TCursorMoveRight(4);printf("████"); TCursorMoveRight(4);printf("██"); TCursorMoveRight(6);printf("██");
+   TCursorMoveRight(2); printf("████████");
+
+  /* 2nd line*/
+  TCursorMoveXY(x/2 - width * 2 - 1 +11, y/2 - 7 );
+  printf("██"); TCursorMoveRight(8);printf("██"); TCursorMoveRight(4);printf("██"); TCursorMoveRight(2);printf("████");
+  TCursorMoveRight(2); printf("████");TCursorMoveRight(2);printf("██");
+
+  /* 3rd line*/
+  TCursorMoveXY(x/2 - width * 2 - 1 +11, y/2 - 6 );
+  printf("██"); TCursorMoveRight(2);printf("████"); TCursorMoveRight(2);printf("████████");TCursorMoveRight(2);printf("██"); TCursorMoveRight(2);printf("██");
+  TCursorMoveRight(2); printf("██"); TCursorMoveRight(2); printf("██████");
+
+  /* 4th line*/
+  TCursorMoveXY(x/2 - width * 2 - 1 +11, y/2 - 5 );
+  printf("██"); TCursorMoveRight(4);printf("██"); TCursorMoveRight(2);printf("██"); TCursorMoveRight(4);printf("██");
+  TCursorMoveRight(2); printf("██");TCursorMoveRight(6); printf("██");TCursorMoveRight(2); printf("██");
+
+	/* 5th line*/
+  TCursorMoveXY(x/2 - width * 2 - 1 +11, y/2 - 4 );
+  TCursorMoveRight(2);printf("██████"); TCursorMoveRight(2);printf("██"); TCursorMoveRight(4);printf("██"); TCursorMoveRight(2);printf("██");
+	TCursorMoveRight(6); printf("██"); TCursorMoveRight(2); printf("████████");
+
+	/* 6th line*/
+  TCursorMoveXY(x/2 - width * 2 - 1 +11, y/2 - 2 );
+  TCursorMoveRight(2);printf("████"); TCursorMoveRight(4);printf("██"); TCursorMoveRight(2);printf("██"); TCursorMoveRight(2);printf("████████");
+  TCursorMoveRight(2); printf("██████");
+
+	/* 7th line*/
+  TCursorMoveXY(x/2 - width * 2 - 1 +11, y/2 - 1 );
+  printf("██"); TCursorMoveRight(4);printf("██"); TCursorMoveRight(2);printf("██"); TCursorMoveRight(2);printf("██");TCursorMoveRight(2); printf("██");
+	TCursorMoveRight(8); printf("██"); TCursorMoveRight(4); printf("██");
+
+	/* 8th line*/
+  TCursorMoveXY(x/2 - width * 2 - 1 +11, y/2  );
+	printf("██"); TCursorMoveRight(4);printf("██"); TCursorMoveRight(2);printf("██"); TCursorMoveRight(2);printf("██");TCursorMoveRight(2); printf("██████");
+  TCursorMoveRight(4); printf("██████");
+
+	/* 9th line*/
+  TCursorMoveXY(x/2 - width * 2 - 1 +11, y/2 + 1 );
+	printf("██"); TCursorMoveRight(4);printf("██"); TCursorMoveRight(2);printf("██"); TCursorMoveRight(2);printf("██");TCursorMoveRight(2); printf("██");
+  TCursorMoveRight(8); printf("██"); TCursorMoveRight(2); printf("██");
+
+	/* 10th line*/
+  TCursorMoveXY(x/2 - width * 2 - 1 +11, y/2 + 2 );
+	TCursorMoveRight(2);printf("████"); TCursorMoveRight(6);printf("██"); TCursorMoveRight(4);printf("████████"); TCursorMoveRight(2);printf("██");
+	TCursorMoveRight(4); printf("██");
+  
+
+
+	TCursorMoveXY(x/2 - width * 2 - 1 + 5, y/2 + 4 );	
+  TChangeSettings(THIWHITE);
+  printf("PRESS W/A/S/D or ARROWS TO CONTINUE, PRESS E TO EXIT");
+
+	TCursorMoveXY(x/2 - 5, y/2 - height - 1  + 2 * height + 4);
+  TRGBForeground(255,0,0);
+  printf("HighScore: %d", 1000000);
+
 }
+
+
+
+
 
 
 

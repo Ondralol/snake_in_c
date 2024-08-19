@@ -23,4 +23,4 @@ void displayStartGame(size_t width, size_t height, snake * gameData);
 
 void displayPause(size_t width, size_t height, snake * gameData);
 
-void displayGameOver();
+void displayGameOver(size_t width, size_t height, snake * gameData);

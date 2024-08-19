@@ -6,6 +6,7 @@
 
 void strToNum(size_t * value, char * str )
 {
+	//printf("Val: %s\n", str);
 	size_t val = 1;
 	size_t newValue = 0; 
 	size_t len = strlen(str);
@@ -17,5 +18,4 @@ void strToNum(size_t * value, char * str )
 		val *= 10;
 	}
 	*value = newValue;
-	printf("%zu\n", *value);
 }

@@ -29,7 +29,7 @@ int main (int argc, char ** argv)
 		strToNum(&width, argv[1]);
 		strToNum(&height, argv[2]);
 	}
-
+	
 	/* Changing terminal settings */
 	struct termios settings;
 
