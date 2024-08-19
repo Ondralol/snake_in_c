@@ -7,15 +7,6 @@
 #include "deque.h"
 #include "terminal.h"
 
-/* TODO */ 
-
-/*
-typedef struct Settings
-{
-	int x;
-	int y;
-} Settings;
-*/
 
 extern int signalVal;
 
@@ -23,38 +14,60 @@ int menuLogic(size_t score);
 int gameLogic(size_t x, size_t y, size_t * score);
 int gameOverLogic(size_t width, size_t height, snake * gameData);
 
+/* Loop that runs the game */
 void runGame(size_t width, size_t height)
 {
 		size_t score = 0;
 		int outputSignal = 0;
-		
+			
 		outputSignal = menuLogic(score);
-    if (outputSignal == 0 )
+    /* Exits the game if 'e' is pressed in the menu */
+		if (outputSignal == 0 )
     	return;
 		while (true)
 		{
 			outputSignal = gameLogic(width, height, &score);
-
+			/* Exits the game if 'e' is pressed in the game screen*/
 			if (outputSignal == 0 )
 				return;
 		}
 
 }
 
+/* Input logic for the menu */
 int menuLogic(size_t score)
 {
 	displayMenu();
 	int c = 0;
 	while (true)
 	{
+		/* If ctrl C was pressed */
 		if ( signalVal == 2 )
 			return 0;
-
+		
+		/* Checks for window resize */
 		signal(SIGWINCH, &windowResize);
 		if ( signalVal == 1 )
 			displayMenu();
 			
 		c = getchar();
+		/* Arrows input handling */
+		if (c == '\x1B')
+    {
+      if (getchar() == '[')
+      {
+        switch(getchar())
+        {
+          case 'A':
+          case 'B':
+          case 'C':
+          case 'D':
+          c = 'A'; break;
+        }
+      }
+    }
+		
+		/* Input handling */
 		switch (c)
 		{
 			case 'W':
@@ -88,8 +101,10 @@ void clearBuffer()
 	while ( (c = getchar()) != EOF );
 }
 
+/* Input logic for paused game */
 int pauseLogic(size_t width, size_t height, snake * gameData)
 {
+	/* Using this variable so that I only change the screen when necessary */
 	bool screenChange = false;
 	int x, y;
   TGetTerminalSize(&x,&y);
@@ -98,12 +113,15 @@ int pauseLogic(size_t width, size_t height, snake * gameData)
 
 	while (true)
   {
-    if ( signalVal == 2 )
+    /* If ctrl C was pressed */
+		if ( signalVal == 2 )
       return -1;
 
+		/* Checks for window resizing */
 		signal(SIGWINCH, &windowResize);
     if ( signalVal == 1 )
 		{
+			/* Displaying all information thats needed */
 			screenChange = true;
 			usleep(20000);
 			displayGame(width, height);
@@ -113,17 +131,22 @@ int pauseLogic(size_t width, size_t height, snake * gameData)
 			fflush(stdout);
 			usleep(200000);
 		}
+
     c = getchar();
+
+		/* Handling input*/
     switch (c)
     {
-      case 'P':
+      /* Resumes the game if 'p' is pressed*/
+			case 'P':
 			case 'p':
       usleep(50000);
 			if ( screenChange )
 				return 1;
 			else
 				return 0;
-
+			
+			/* Exits the game if 'e' is pressed*/
       case 'E':
       case 'e':
         return -1;
@@ -132,19 +155,24 @@ int pauseLogic(size_t width, size_t height, snake * gameData)
 
 }
 
+/* Handles input logic for game over */
 int gameOverLogic(size_t width, size_t height, snake * gameData)
 {
   int x, y;
   TGetTerminalSize(&x,&y);
   displayGameOver(width, height, gameData);
   int c;
-
-  while (true)
+	fflush(stdout);
+	usleep(750000);
+	clearBuffer();
+	while (true)
   {
-    if ( signalVal == 2 )
+    /* If 'CTRL C' was pressed*/
+		if ( signalVal == 2 )
       return 0;
 
-    signal(SIGWINCH, &windowResize);
+    /* Checks if window was resized and handles displaying the game*/
+		signal(SIGWINCH, &windowResize);
     if ( signalVal == 1 )
     {
       usleep(20000);
@@ -156,7 +184,7 @@ int gameOverLogic(size_t width, size_t height, snake * gameData)
       usleep(200000);
     } 
     c = getchar();
-    
+    /* Handles arrows input */
 		 if (c == '\x1B')
     {
       if (getchar() == '[')
@@ -172,6 +200,7 @@ int gameOverLogic(size_t width, size_t height, snake * gameData)
       }
     }
 
+		/* Handles normal input */
 		switch (c)
     {
       case 'w':
@@ -181,7 +210,6 @@ int gameOverLogic(size_t width, size_t height, snake * gameData)
 			case 's':
 			case 'd':
 			case 'D':
-				usleep(50000);
       	return 1;
 
       case 'E':
@@ -193,11 +221,11 @@ int gameOverLogic(size_t width, size_t height, snake * gameData)
 }
 
 
-/* XY is width and height */
+/* Handles input logic for the main game */
 int gameLogic(size_t width, size_t height,size_t * score)
 {
+	/* Sets default settings just to be safe */
 	snake gameData;
-	//TODO RANDOM
 	gameData.currentDirection = DOWN;
 	gameData.head = NULL;
 	gameData.tail = NULL;
@@ -211,15 +239,17 @@ int gameLogic(size_t width, size_t height,size_t * score)
 	int c = 0;
 	int result;
 	size_t timer = 0;
-	bool breakFlag = 0;
+	bool breakFlag = 0; // if user pressed 'e' to exit the game
 	while (true)
 	{
+		/* If 'CTRL C' was pressed*/
 		if ( signalVal == 2 )
     {
 			dequeFree(gameData.head);
 			return 0;
 		}
-		timer ++;
+
+		/* If window was resized */	
 		signal(SIGWINCH, &windowResize);
 		if ( signalVal == 1)
 		{
@@ -230,14 +260,19 @@ int gameLogic(size_t width, size_t height,size_t * score)
 			usleep(200000);
 			//signalVal = 0;
 		}
-
+		
+		/* Using "timer" with usleep so that I can update the game screen to my needs */
+		timer ++;
 		if ( timer == 10 )
 		{
 			timer = 0;
 			if ( !displaySnake(width, height, &gameData) )
 				breakFlag = 1;;
 		}
+
 		c = getchar();
+		/* Arrows input */
+
 		if (c == '\x1B')
 		{
 			if (getchar() == '[')
@@ -255,7 +290,8 @@ int gameLogic(size_t width, size_t height,size_t * score)
 				}
 			}
 		}
-
+		
+		/* Handles normal input, basically updates the snakes direction and displays new head and apple and clears the buffer*/
 		switch (c)
 		{
 			case 'W':
@@ -266,7 +302,6 @@ int gameLogic(size_t width, size_t height,size_t * score)
 					usleep(5000 * (10 - timer));
 					if ( !displaySnake(width, height, &gameData) )
         		breakFlag = 1;
-					//usleep(20000);
 					timer = 0;	
 					clearBuffer();
 				}
@@ -280,7 +315,6 @@ int gameLogic(size_t width, size_t height,size_t * score)
 					usleep(5000 * (10 - timer));
 					if ( !displaySnake(width, height, &gameData) )
 						breakFlag = 1;
-					//usleep(20000);
 					timer = 0;
 					clearBuffer();
 				}
@@ -294,7 +328,6 @@ int gameLogic(size_t width, size_t height,size_t * score)
 					usleep(5000 * (10 - timer));
 					if ( !displaySnake(width, height, &gameData) )
 						breakFlag = 1;
-					//usleep(20000);
 					timer = 0;
 					clearBuffer();
 				}
@@ -308,20 +341,22 @@ int gameLogic(size_t width, size_t height,size_t * score)
 					usleep(5000 * (10 - timer) );
 					if ( !displaySnake(width, height, &gameData) )
 						breakFlag = 1;
-					//usleep(20000);
 					timer = 0;
 					clearBuffer();
 				}
 				break;
-
+			
+			/* Exits the game */
 			case 'E':
 			case 'e':
 				dequeFree(gameData.head);
 				return 0;
-
+			
+			/* Pauses the game */
 			case 'P':
 			case 'p':
 				clearBuffer();
+				/* Displays the pause menu and after exiting menu, if window size wasn't changed, only displays the snake and the board */
 				if ( (result = pauseLogic(width, height, &gameData)) == 1 )
 				{
 					displayGame(width, height);
@@ -331,6 +366,7 @@ int gameLogic(size_t width, size_t height,size_t * score)
       		usleep(200000);
 
 				}
+				/* Displays the pause menu and if the display size was changed, displays everything */
 				else if (result == 0)
 				{	
 					int x, y;
@@ -341,6 +377,7 @@ int gameLogic(size_t width, size_t height,size_t * score)
           fflush(stdout);
           usleep(200000);
 				}
+				/* If 'e' was pressed in the pause menu, ends the game */
 				else
 				{
 					dequeFree(gameData.head);
@@ -348,14 +385,13 @@ int gameLogic(size_t width, size_t height,size_t * score)
 				}
 				;
 		}
+		/* If 'e' was pressed during the main game loop */
 		if ( breakFlag )
 		{
-			sleep(1);
 			clearBuffer();
 			bool result = gameOverLogic(width, height, &gameData);
 			dequeFree(gameData.head);
 			clearBuffer();
-			//sleep(1);
 			return result;
 		}
 		fflush(stdout);

@@ -4,7 +4,7 @@
 #include "gameData.h"
 #include "conversion.h"
 
-/* Using Murmurhash algorithm :( */
+/* Using Murmurhash algorithm */
 size_t checkSum(size_t n)
 {
 	n ^= n >> 16;
@@ -15,6 +15,7 @@ size_t checkSum(size_t n)
   return n;
 }
 
+/* Using simple checksum so that user cannot change the score */
 void saveHighScore(size_t score)
 {
 	FILE * pF = fopen("gameData.txt", "w");
@@ -23,6 +24,8 @@ void saveHighScore(size_t score)
 	fprintf(pF, "%zu;%zu\n", score, checkSum(score));
 	fclose(pF);
 }
+
+/* Tries to read highscore from file, checks for errors and checksum, if there are any problems, highscore is set to 0 */
 int getHighScore()
 {
 	FILE * pF = fopen("gameData.txt", "r");
@@ -32,7 +35,8 @@ int getHighScore()
 	char * line = NULL;
 	size_t size = 0;
 	int len;
-	
+
+	/* Reads until delimeter */
 	len = getdelim(&line, &size, ';', pF);
 	if (len == -1)
 	{
@@ -41,7 +45,6 @@ int getHighScore()
 		fclose(pF);
 		return 0;
 	}
-
 	line[len - 1] = '\0';
 
 	size_t score;
@@ -55,8 +58,10 @@ int getHighScore()
 		return 0;
 	}
 	
+	/* Reads until delimeter */
 	len = getdelim(&line, &size, '\n', pF);
-  if (len == -1)
+  /* If failed to read*/
+	if (len == -1)
 	{
 		fprintf(pF, "%d;%zu\n", 0, checkSum(0));
 		free(line);
@@ -65,16 +70,18 @@ int getHighScore()
 	}
 
 	line[len - 1] = '\0';
+	
+	/* Checks if the checkSum is correct */
+	
 	size_t check;
 	strToNum(&check, line);
-
 	free(line);
-		
 	if (check != checkSum(score))
 	{
 		fprintf(pF, "%d;%zu\n", 0, checkSum(0));
 		return 0;
 	}
+	
 	fclose(pF);
 	return score;
 }

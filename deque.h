@@ -7,7 +7,6 @@ typedef enum dir
   UP, DOWN, RIGHT, LEFT
 } direction;
 
-/* Using deque to represent tile positions */
 /* X, Y corresponds to tile position */
 typedef struct snakePosDeque
 {

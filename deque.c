@@ -31,6 +31,7 @@ snakePositionDeque * dequePopBack(snakePositionDeque * tail)
 	return NULL;
 }
 
+/* Returns head */
 snakePositionDeque * dequeAddFront(snakePositionDeque * head, int x, int y)
 {
 	snakePositionDeque * new = (snakePositionDeque*) malloc(sizeof(snakePositionDeque));
@@ -43,6 +44,7 @@ snakePositionDeque * dequeAddFront(snakePositionDeque * head, int x, int y)
 	return new;
 }
 
+/* Retuns true if found and false if not found */
 bool dequeFindPosition(snakePositionDeque * head, int x, int y)
 {
 	while ( head )
@@ -54,6 +56,7 @@ bool dequeFindPosition(snakePositionDeque * head, int x, int y)
 	return false;
 }
 
+/* Returns tail */
 snakePositionDeque * dequeTail(snakePositionDeque * head)
 {
 	snakePositionDeque * prev = head;
