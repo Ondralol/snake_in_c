@@ -1,7 +1,7 @@
 CC=gcc
 LD=$(CC)
 CFLAGS =-std=gnu99 -Wall -pedantic -fsanitize=address -fsanitize=undefined -g
-SOURCE=source
+SOURCE=src
 
 all: main
 
