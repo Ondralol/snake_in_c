@@ -350,10 +350,12 @@ int gameLogic(size_t width, size_t height,size_t * score)
 		}
 		if ( breakFlag )
 		{
+			sleep(1);
+			clearBuffer();
 			bool result = gameOverLogic(width, height, &gameData);
 			dequeFree(gameData.head);
 			clearBuffer();
-			usleep(200000);
+			//sleep(1);
 			return result;
 		}
 		fflush(stdout);

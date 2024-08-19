@@ -7,6 +7,7 @@
 #include <time.h>
 #include "display.h"
 #include "terminal.h"
+#include "gameData.h"
 
 // TODO animation of the borders
 // TODO start animation
@@ -25,6 +26,8 @@ void displayBorders(const char * colour)
 	int x, y;
 	TGetTerminalSize(&x,&y);
 	TCursorReset();
+	
+
 	TChangeSettings(colour);
 	for ( int i = 0; i < x; i ++)
 		printf("▀");
@@ -79,7 +82,7 @@ void displayMenu()
 	TChangeSettings(TBRED);
 	TCursorDownLines(2);
 	TCursorMoveRight((x/2)-8);
-	printf("HIGHSCORE: %d\n", 0); //TODO
+	printf("HIGHSCORE: %d\n", getHighScore());
 	
 	TChangeSettings(TBGREEN);
 	TCursorMoveRight((x/2)-35);
@@ -463,7 +466,9 @@ void displayGameOver(size_t width, size_t height, snake * gameData)
   TCursorMoveXY(x/2 - width * 2 - 1 +11, y/2 + 2 );
 	TCursorMoveRight(2);printf("████"); TCursorMoveRight(6);printf("██"); TCursorMoveRight(4);printf("████████"); TCursorMoveRight(2);printf("██");
 	TCursorMoveRight(4); printf("██");
-  
+	
+	if (getHighScore() < gameData -> score)
+		saveHighScore(gameData -> score);
 
 
 	TCursorMoveXY(x/2 - width * 2 - 1 + 5, y/2 + 4 );	
@@ -472,7 +477,7 @@ void displayGameOver(size_t width, size_t height, snake * gameData)
 
 	TCursorMoveXY(x/2 - 5, y/2 - height - 1  + 2 * height + 4);
   TRGBForeground(255,0,0);
-  printf("HighScore: %d", 1000000);
+  printf("HighScore: %d", getHighScore());
 
 }
 

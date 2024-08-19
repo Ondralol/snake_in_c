@@ -1,4 +1,7 @@
 #pragma once
 #include <stddef.h>
+#include <stdbool.h>
 
-void strToNum(size_t *, char *);
+bool strToNum(size_t *, char *);
+
+
