@@ -175,7 +175,7 @@ void displayTiles(size_t width, size_t height, size_t x, size_t y)
 
 	TCursorDownLines(1);
 	TCursorMoveXY(x/2 - width * 2 + 1, y/2 - height);	
-	TChangeSettings(THIGREEN);
+	TRGBForeground(51, 218, 122);
 	for (int i = 0; i < height*2; i ++)
 	{
 		for (int j = 0; j < width; j++)
@@ -189,7 +189,7 @@ void displayTiles(size_t width, size_t height, size_t x, size_t y)
 	
 	    
 	TCursorMoveXY(x/2 - width * 2 + 1, y/2 - height); 
-	TChangeSettings(TRGREEN);
+	TRGBForeground(38, 162, 105);
 	for (int i = 0; i < height; i ++)
   {
 		for (int j = 0; j < width / 2; j++)
@@ -481,7 +481,7 @@ void displayGameOver(size_t width, size_t height, snake * gameData)
 	
 	TCursorMoveXY(x/2 - 5, y/2 - height - 1  + 2 * height + 4);
   TChangeSettings(TBGREEN);
-  printf("SCORE: %x", gameData -> score);
+  printf("SCORE: %d", gameData -> score);
 
 }
 

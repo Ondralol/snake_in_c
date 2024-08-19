@@ -10,10 +10,6 @@
 
 extern int signalVal;
 
-int menuLogic(size_t score);
-int gameLogic(size_t x, size_t y, size_t * score);
-int gameOverLogic(size_t width, size_t height, snake * gameData);
-
 /* Loop that runs the game */
 void runGame(size_t width, size_t height)
 {
