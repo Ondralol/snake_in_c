@@ -5,10 +5,10 @@ SOURCE=source
 
 all: main
 
-main: $(SOURCE)main.o display.o conversion.o game.o terminal.o deque.o gameData.o
+main: $(SOURCE)/main.o display.o conversion.o game.o terminal.o deque.o gameData.o
 	$(LD) $(CFLAGS) -o $@ $^
 
-%.o: $(SOURCE)%.c
+%.o: $(SOURCE)/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
  
 run:
