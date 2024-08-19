@@ -17,11 +17,11 @@ typedef struct Settings
 } Settings;
 */
 
-extern bool signalVal;
+extern int signalVal;
 
 int menuLogic(size_t score);
 int gameLogic(size_t x, size_t y, size_t * score);
-int gameOverLogic(size_t * score);
+int gameOverLogic(size_t width, size_t height, snake * gameData);
 
 void runGame(size_t width, size_t height)
 {
@@ -39,8 +39,6 @@ void runGame(size_t width, size_t height)
 
 			if (outputSignal == 0 )
 				return;
-			else
-				displayGameOver();
 		}
 
 }
@@ -51,6 +49,9 @@ int menuLogic(size_t score)
 	int c = 0;
 	while (true)
 	{
+		if ( signalVal == 2 )
+			return 0;
+
 		signal(SIGWINCH, &windowResize);
 		if ( signalVal == 1 )
 			displayMenu();
@@ -99,7 +100,10 @@ int pauseLogic(size_t width, size_t height, snake * gameData)
 
 	while (true)
   {
-    signal(SIGWINCH, &windowResize);
+    if ( signalVal == 2 )
+      return -1;
+
+		signal(SIGWINCH, &windowResize);
     if ( signalVal == 1 )
 		{
 			screenChange = true;
@@ -116,7 +120,8 @@ int pauseLogic(size_t width, size_t height, snake * gameData)
     {
       case 'P':
 			case 'p':
-      if ( screenChange )
+      usleep(50000);
+			if ( screenChange )
 				return 1;
 			else
 				return 0;
@@ -128,6 +133,67 @@ int pauseLogic(size_t width, size_t height, snake * gameData)
   }
 
 }
+
+int gameOverLogic(size_t width, size_t height, snake * gameData)
+{
+  int x, y;
+  TGetTerminalSize(&x,&y);
+  displayGameOver(width, height, gameData);
+  int c;
+
+  while (true)
+  {
+    if ( signalVal == 2 )
+      return 0;
+
+    signal(SIGWINCH, &windowResize);
+    if ( signalVal == 1 )
+    {
+      usleep(20000);
+      displayGame(width, height);
+      displaySnakeAll(gameData, width, height);
+      displaySnakeTile(width, height, gameData -> appleX, gameData -> appleY, 255,0,0);
+      displayGameOver(width, height, gameData);
+      fflush(stdout);
+      usleep(200000);
+    } 
+    c = getchar();
+    
+		 if (c == '\x1B')
+    {
+      if (getchar() == '[')
+      {
+        switch(getchar())
+        {
+          case 'A':
+          case 'B':
+          case 'C':
+          case 'D':
+          c = 'A'; break;
+        }
+      }
+    }
+
+		switch (c)
+    {
+      case 'w':
+      case 'W':
+      case 'a':
+			case 'A':
+			case 's':
+			case 'd':
+			case 'D':
+				usleep(50000);
+      	return 1;
+
+      case 'E':
+      case 'e':
+        return 0;
+    }
+  }
+
+}
+
 
 /* XY is width and height */
 int gameLogic(size_t width, size_t height,size_t * score)
@@ -150,6 +216,11 @@ int gameLogic(size_t width, size_t height,size_t * score)
 	bool breakFlag = 0;
 	while (true)
 	{
+		if ( signalVal == 2 )
+    {
+			dequeFree(gameData.head);
+			return 0;
+		}
 		timer ++;
 		signal(SIGWINCH, &windowResize);
 		if ( signalVal == 1)
@@ -169,6 +240,24 @@ int gameLogic(size_t width, size_t height,size_t * score)
 				breakFlag = 1;;
 		}
 		c = getchar();
+		if (c == '\x1B')
+		{
+			if (getchar() == '[')
+			{
+				switch(getchar())
+				{
+					case 'A':
+						c = 'W'; break;
+					case 'B':
+            c = 'S'; break;
+					case 'C':
+            c = 'D'; break;
+					case 'D':
+            c = 'A'; break;
+				}
+			}
+		}
+
 		switch (c)
 		{
 			case 'W':
@@ -234,6 +323,7 @@ int gameLogic(size_t width, size_t height,size_t * score)
 
 			case 'P':
 			case 'p':
+				clearBuffer();
 				if ( (result = pauseLogic(width, height, &gameData)) == 1 )
 				{
 					displayGame(width, height);
@@ -263,9 +353,7 @@ int gameLogic(size_t width, size_t height,size_t * score)
 		if ( breakFlag )
 		{
 			dequeFree(gameData.head);
-			printf("GAME OVER");
-			sleep(1);
-			return 1;
+			return gameOverLogic(width, height, &gameData);
 		}
 		fflush(stdout);
 		usleep(40000);

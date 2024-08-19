@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <fcntl.h>
+#include <signal.h>
+#include <stdlib.h>
 #include "display.h"
 #include "conversion.h"
 #include "game.h"
@@ -15,11 +17,10 @@
 #define SNAKECHARACTER 100 /* TODO */
 
 /* Only using single global variable for signal handling as there is no better way */
-bool signalVal;
+int signalVal = -1;
 
 int main (int argc, char ** argv)
 {
-
 	size_t width = WIDTH;
 	size_t height = HEIGHT;
 	
@@ -33,7 +34,6 @@ int main (int argc, char ** argv)
 	struct termios settings;
 
 	TSetup(&settings);
-
 	runGame(width, height);
 
 	/* Restoring the old settings */

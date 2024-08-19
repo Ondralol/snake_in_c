@@ -1,11 +1,18 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <signal.h>
 #include "terminal.h"
 
+extern int signalVal;
 
 void TChangeSettings(const char * str);
 
 /* Sets up all terminal settings */
+
+void INTHandler(int dummy)
+{
+	signalVal = 2;
+}
 
 void TSetup(struct termios * settings)
 {
@@ -23,10 +30,11 @@ void TSetup(struct termios * settings)
 	/* Non-blocking behaviour*/
 	fcntl( 0, F_SETFL, O_NONBLOCK);
 
+	/* Ctrl C signal*/
+	signal(SIGINT, INTHandler);
 
 	/* Changing STDIN settings - processing new line instantly and not after \n, turning off ECHO*/
 	oldSettings.c_lflag &= ~(ICANON | ECHO);
-
 
 	/* Applying new settings */
 	tcsetattr(STDIN_FILENO, TCSANOW, &oldSettings);

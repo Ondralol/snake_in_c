@@ -67,6 +67,8 @@
 #define TEXITALTSCREEN	"\033[?1049l"
 
 /* Terminal settings */
+
+
 void TSetup(struct termios * settings);
 
 void TReset(struct termios * settings);

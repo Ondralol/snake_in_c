@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>
+#include <time.h>
 #include "display.h"
 #include "terminal.h"
 
@@ -10,7 +11,7 @@
 // TODO start animation
 // TODO save highscore
 
-extern bool signalVal;
+extern int signalVal;
 
 void windowResize()
 {
@@ -125,9 +126,15 @@ void displaySnakeTile(int width, int height, int tileX, int tileY, int r, int g,
 void displaySnakeAll(snake * gameData, int width, int height)
 {
 	snakePositionDeque * head = gameData -> head;
+	bool first = 1;
 	while ( head )
 	{
-		displaySnakeTile(width, height, head -> x, head -> y, 0, 0, 139);
+		if (first)
+			displaySnakeTile(width, height, head -> x, head -> y, 0, 0, 128);
+		else
+		displaySnakeTile(width, height, head -> x, head -> y, 8,24,168);
+
+		first = 0;
 		head = head -> prev;
 	}
 }
@@ -237,13 +244,13 @@ void displayStartGame(size_t width, size_t height, snake * gameData)
 
 	gameData -> head = dequeAddFront(gameData -> head,  width / 2, height / 2 - 2);
 	
-	displaySnakeTile(width, height, gameData -> head -> x, gameData -> head -> y, 0,0,139);
+	displaySnakeTile(width, height, gameData -> head -> x, gameData -> head -> y,8,24,168);
 
 	fflush(stdout);
 	usleep(100000);
 
 	gameData -> head = dequeAddFront(gameData -> head, width / 2, height / 2 - 1);
-	displaySnakeTile(width, height, gameData -> head -> x, gameData -> head -> y, 0,0,139);
+	displaySnakeTile(width, height, gameData -> head -> x, gameData -> head -> y, 8,24,168);
 
 	fflush(stdout);
   usleep(100000);
@@ -251,7 +258,7 @@ void displayStartGame(size_t width, size_t height, snake * gameData)
 
 	gameData -> head = dequeAddFront(gameData -> head, width / 2, height / 2 );
 
-	displaySnakeTile(width, height, gameData -> head -> x, gameData -> head -> y, 0,0, 139);
+	displaySnakeTile(width, height, gameData -> head -> x, gameData -> head -> y, 0,0,128);
 
 	fflush(stdout);
   usleep(100000);
@@ -304,6 +311,7 @@ void displayPause(size_t width, size_t height, snake * gameData)
 
 bool displaySnake(size_t width, size_t height, snake * gameData)
 {
+	srand(time(NULL));
 	int x, y;
 	TGetTerminalSize(&x,&y);
 	
@@ -321,6 +329,8 @@ bool displaySnake(size_t width, size_t height, snake * gameData)
   {
 		displayStartGame(width, height, gameData);
 	}
+
+	displaySnakeTile(width, height, gameData -> head -> x, gameData -> head -> y, 8,24,168);
 
 	if ( gameData ->  currentDirection == UP )
 		gameData -> head = dequeAddFront(gameData -> head, gameData -> head -> x, gameData -> head -> y - 1);
@@ -340,7 +350,7 @@ bool displaySnake(size_t width, size_t height, snake * gameData)
 	if (dequeFindPosition(gameData -> head -> prev, gameData -> head -> x, gameData -> head -> y) )
     return false;
 
-	displaySnakeTile(width, height, gameData -> head -> x, gameData -> head -> y, 0,0,139);
+	displaySnakeTile(width, height, gameData -> head -> x, gameData -> head -> y, 0,0,128);
 	
 	/* Check for snake collision */
 
