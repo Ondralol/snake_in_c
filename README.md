@@ -1,4 +1,4 @@
-# Snake in pure C 
+# Snake in pure C :)
 Snake game programmed in C using UNIX terminal GUI
 
 Works only on UNIX
