@@ -1,7 +1,7 @@
 # Snake in pure C 
-Snake game programmed in C using UNIX terminal GUI.
+Snake game programmed in C using UNIX terminal GUI
 
-Works only on UNIX.
+Works only on UNIX
 
 ## How to play
 Use **make** and **make run** to play the game.
