@@ -15,4 +15,4 @@ run:
 	@./main $(word 2, $(MAKECMDGOALS)) $(word 3, $(MAKECMDGOALS))
  
 clean:
-	rm -f *.o main
+	rm -f src/*.o main
